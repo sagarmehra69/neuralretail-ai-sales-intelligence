@@ -9,6 +9,9 @@ lightgbm
 prophet
 shap
 mlflow
+torch
+torchvision
+torchaudio
 streamlit
 fastapi
 uvicorn

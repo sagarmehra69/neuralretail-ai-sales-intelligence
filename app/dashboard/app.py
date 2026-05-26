@@ -12,7 +12,7 @@ st.set_page_config(
     page_title="NeuralRetail AI",
     page_icon="📈",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 # =========================================================
@@ -53,28 +53,13 @@ st.subheader("📊 Platform Overview")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-
-    st.metric(
-        label="Forecast Accuracy",
-        value="78.5%",
-        delta="+4.2%"
-    )
+    st.metric(label="Forecast Accuracy", value="78.5%", delta="+4.2%")
 
 with col2:
-
-    st.metric(
-        label="Churn Detection AUC",
-        value="0.91",
-        delta="+0.03"
-    )
+    st.metric(label="Churn Detection AUC", value="0.91", delta="+0.03")
 
 with col3:
-
-    st.metric(
-        label="Inventory Risk Alerts",
-        value="42",
-        delta="-8"
-    )
+    st.metric(label="Inventory Risk Alerts", value="42", delta="-8")
 
 # =========================================================
 # DESCRIPTION

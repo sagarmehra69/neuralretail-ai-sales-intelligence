@@ -1,9 +1,14 @@
-# =========================================================
-# Centralized Data Loader
-# =========================================================
-
 import pandas as pd
 import streamlit as st
+from pathlib import Path
+
+# =========================================================
+# BASE DATA PATH
+# =========================================================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DATA_DIR = BASE_DIR / "data"
 
 # =========================================================
 # FORECAST DATA
@@ -13,9 +18,7 @@ import streamlit as st
 @st.cache_data
 def load_forecast_data():
 
-    df = pd.read_csv(r"D:\NuralRetail\app\dashboard\data\forecast_results.csv")
-
-    return df
+    return pd.read_csv(DATA_DIR / "forecast_results.csv")
 
 
 # =========================================================
@@ -26,9 +29,7 @@ def load_forecast_data():
 @st.cache_data
 def load_churn_data():
 
-    df = pd.read_csv(r"D:\NuralRetail\app\dashboard\data\churn_predictions.csv")
-
-    return df
+    return pd.read_csv(DATA_DIR / "churn_predictions.csv")
 
 
 # =========================================================
@@ -39,9 +40,7 @@ def load_churn_data():
 @st.cache_data
 def load_inventory_data():
 
-    df = pd.read_csv(r"D:\NuralRetail\app\dashboard\data\inventory_risk.csv")
-
-    return df
+    return pd.read_csv(DATA_DIR / "inventory_risk.csv")
 
 
 # =========================================================
@@ -52,7 +51,4 @@ def load_inventory_data():
 @st.cache_data
 def load_model_metrics():
 
-    df = pd.read_csv(r"D:\NuralRetail\app\dashboard\data\model_metrics.csv")
-
-    return df
-
+    return pd.read_csv(DATA_DIR / "model_metrics.csv")

@@ -1,11 +1,7 @@
-# =========================================================
-# Inventory Intelligence Dashboard
-# =========================================================
-
 import streamlit as st
-import pandas as pd
-import numpy as np
 import plotly.express as px
+
+from utils.loader import load_inventory_data
 
 # =========================================================
 # PAGE CONFIG
@@ -24,72 +20,33 @@ AI-powered inventory optimization and stock risk analytics.
 """)
 
 # =========================================================
-# SIMULATED INVENTORY DATA
-# (Replace later with real inventory outputs)
+# LOAD DATA
 # =========================================================
 
-np.random.seed(42)
-
-inventory_count = 300
-
-inventory_df = pd.DataFrame(
-    {
-        "Product": [f"Product_{i}" for i in range(1, inventory_count + 1)],
-        "Current_Stock": np.random.randint(10, 500, inventory_count),
-        "Reorder_Point": np.random.randint(20, 150, inventory_count),
-        "EOQ": np.random.randint(50, 300, inventory_count),
-        "Inventory_Risk_Score": np.random.uniform(0, 1, inventory_count),
-    }
-)
-
-# =========================================================
-# INVENTORY RISK LABELS
-# =========================================================
-
-inventory_df["Risk_Level"] = pd.cut(
-    inventory_df["Inventory_Risk_Score"],
-    bins=[0, 0.4, 0.7, 1],
-    labels=["Low Risk", "Medium Risk", "High Risk"],
-)
+inventory_df = load_inventory_data()
 
 # =========================================================
 # KPI SECTION
 # =========================================================
 
-st.markdown("## 📌 Inventory KPIs")
+total_products = len(inventory_df)
 
-col1, col2, col3, col4 = st.columns(4)
+avg_risk = inventory_df["Inventory_Risk_Score"].mean()
 
-with col1:
-    st.metric("Low Stock Items", "42", "-6")
-
-with col2:
-    st.metric("Dead Stock", "18", "-3")
-
-with col3:
-    st.metric("Reorder Alerts", "27", "+4")
-
-with col4:
-    st.metric("Avg Risk Score", "0.46", "-0.02")
-
-# =========================================================
-# SIDEBAR FILTERS
-# =========================================================
-
-st.sidebar.header("Inventory Filters")
-
-selected_risk = st.sidebar.selectbox(
-    "Risk Level", ["All", "Low Risk", "Medium Risk", "High Risk"]
+reorder_alerts = len(
+    inventory_df[inventory_df["current_stock"] < inventory_df["Reorder_Point"]]
 )
 
-# =========================================================
-# FILTER LOGIC
-# =========================================================
+col1, col2, col3 = st.columns(3)
 
-filtered_df = inventory_df.copy()
+with col1:
+    st.metric("Total Products", total_products)
 
-if selected_risk != "All":
-    filtered_df = filtered_df[filtered_df["Risk_Level"] == selected_risk]
+with col2:
+    st.metric("Reorder Alerts", reorder_alerts)
+
+with col3:
+    st.metric("Average Risk Score", f"{avg_risk:.2f}")
 
 # =========================================================
 # INVENTORY RISK DISTRIBUTION
@@ -99,13 +56,9 @@ st.markdown("---")
 
 st.subheader("📊 Inventory Risk Distribution")
 
-risk_counts = filtered_df["Risk_Level"].value_counts().reset_index()
+fig = px.histogram(inventory_df, x="Inventory_Risk_Score", nbins=30)
 
-risk_counts.columns = ["Risk_Level", "Count"]
-
-fig_risk = px.pie(risk_counts, names="Risk_Level", values="Count", hole=0.4)
-
-st.plotly_chart(fig_risk, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True)
 
 # =========================================================
 # STOCK VS REORDER POINT
@@ -115,35 +68,13 @@ st.markdown("---")
 
 st.subheader("📉 Current Stock vs Reorder Point")
 
-sample_products = filtered_df.head(25)
+sample_df = inventory_df.head(30)
 
-fig_stock = px.bar(
-    sample_products,
-    x="Product",
-    y=["Current_Stock", "Reorder_Point"],
-    barmode="group",
-    title="Stock Monitoring",
+fig2 = px.bar(
+    sample_df, x="product", y=["current_stock", "Reorder_Point"], barmode="group"
 )
 
-st.plotly_chart(fig_stock, use_container_width=True)
-
-# =========================================================
-# EOQ ANALYSIS
-# =========================================================
-
-st.markdown("---")
-
-st.subheader("📦 Economic Order Quantity (EOQ)")
-
-fig_eoq = px.scatter(
-    filtered_df,
-    x="Current_Stock",
-    y="EOQ",
-    color="Inventory_Risk_Score",
-    title="EOQ Optimization",
-)
-
-st.plotly_chart(fig_eoq, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True)
 
 # =========================================================
 # HIGH-RISK PRODUCTS
@@ -153,43 +84,23 @@ st.markdown("---")
 
 st.subheader("🚨 High-Risk Inventory")
 
-high_risk_inventory = filtered_df[filtered_df["Inventory_Risk_Score"] > 0.7]
+high_risk = inventory_df[inventory_df["Inventory_Risk_Score"] > 0.7]
 
-st.dataframe(
-    high_risk_inventory[
-        ["Product", "Current_Stock", "Reorder_Point", "EOQ", "Inventory_Risk_Score"]
-    ],
-    use_container_width=True,
-)
+st.dataframe(high_risk, use_container_width=True)
 
 # =========================================================
-# ABC CLASSIFICATION
+# EOQ ANALYSIS
 # =========================================================
 
 st.markdown("---")
 
-st.subheader("🏷️ ABC Inventory Classification")
+st.subheader("📦 EOQ Analysis")
 
-abc_df = pd.DataFrame({"Category": ["A", "B", "C"], "Products": [50, 120, 130]})
-
-fig_abc = px.bar(abc_df, x="Category", y="Products", title="ABC Inventory Analysis")
-
-st.plotly_chart(fig_abc, use_container_width=True)
-
-# =========================================================
-# REORDER RECOMMENDATIONS
-# =========================================================
-
-st.markdown("---")
-
-st.subheader("🔄 Reorder Recommendations")
-
-reorder_df = filtered_df[filtered_df["Current_Stock"] < filtered_df["Reorder_Point"]]
-
-st.dataframe(
-    reorder_df[["Product", "Current_Stock", "Reorder_Point", "EOQ"]],
-    use_container_width=True,
+fig3 = px.scatter(
+    inventory_df, x="current_stock", y="EOQ", color="Inventory_Risk_Score"
 )
+
+st.plotly_chart(fig3, use_container_width=True)
 
 # =========================================================
 # FOOTER

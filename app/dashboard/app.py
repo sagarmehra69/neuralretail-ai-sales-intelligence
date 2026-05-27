@@ -1,7 +1,3 @@
-# =========================================================
-# NeuralRetail AI Dashboard
-# =========================================================
-
 import streamlit as st
 
 # =========================================================
@@ -10,85 +6,87 @@ import streamlit as st
 
 st.set_page_config(
     page_title="NeuralRetail AI",
-    page_icon="📈",
+    page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # =========================================================
-# MAIN TITLE
+# LOAD CSS
 # =========================================================
 
-st.title("🧠 NeuralRetail AI Sales Intelligence")
 
-st.markdown("""
-### AI-Powered Retail Forecasting, Customer Intelligence & Inventory Optimization
-""")
+def load_css():
+
+    with open("app/dashboard/assets/styles.css") as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
+load_css()
 
 # =========================================================
 # SIDEBAR
 # =========================================================
 
-st.sidebar.title("Navigation")
+with st.sidebar:
+    st.title("🧠 NeuralRetail AI")
 
-st.sidebar.info("""
-NeuralRetail AI Platform
+    st.markdown("""
+    Enterprise Retail Intelligence Platform
+    """)
 
-Modules:
-- Executive Overview
-- Demand Forecasting
-- Customer Intelligence
-- Inventory Intelligence
-- MLOps Monitor
+    st.markdown("---")
+
+    st.subheader("📡 System Status")
+
+    st.success("Forecast Engine Online")
+
+    st.success("Churn Engine Online")
+
+    st.success("Inventory Engine Online")
+
+    st.markdown("---")
+
+    st.subheader("⚙️ Platform Stack")
+
+    st.markdown("""
+    - Prophet Forecasting
+    - XGBoost Models
+    - Churn Prediction
+    - Inventory Intelligence
+    - Streamlit Dashboard
+    - ML Analytics Pipeline
+    """)
+
+    st.markdown("---")
+
+    st.caption("Built with AI + Data Science")
+
+# =========================================================
+# MAIN PAGE
+# =========================================================
+
+st.title("🧠 NeuralRetail AI")
+
+st.markdown("""
+Welcome to the enterprise AI retail intelligence platform.
+
+Use the sidebar to navigate between intelligence modules.
 """)
 
-# =========================================================
-# HOME PAGE CONTENT
-# =========================================================
-
 st.markdown("---")
-
-st.subheader("📊 Platform Overview")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric(label="Forecast Accuracy", value="78.5%", delta="+4.2%")
+    st.info("📈 Forecasting Intelligence")
 
 with col2:
-    st.metric(label="Churn Detection AUC", value="0.91", delta="+0.03")
+    st.info("👥 Customer Intelligence")
 
 with col3:
-    st.metric(label="Inventory Risk Alerts", value="42", delta="-8")
-
-# =========================================================
-# DESCRIPTION
-# =========================================================
+    st.info("📦 Inventory Intelligence")
 
 st.markdown("---")
 
-st.write("""
-NeuralRetail AI is a production-style retail intelligence platform that combines:
-
-- 📈 Demand Forecasting
-- 👥 Customer Churn Prediction
-- 📦 Inventory Intelligence
-- ⚙️ MLOps Monitoring
-- 🧠 Explainable AI
-
-Built using:
-- Streamlit
-- XGBoost
-- LightGBM
-- Prophet
-- SHAP
-- MLflow
-""")
-
-# =========================================================
-# FOOTER
-# =========================================================
-
-st.markdown("---")
-
-st.caption("NeuralRetail AI • Amdox Technologies Project")
+st.success("✅ Platform Operational")

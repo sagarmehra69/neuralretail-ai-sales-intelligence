@@ -55,3 +55,4 @@ def load_model_metrics():
     df = pd.read_csv(r"D:\NuralRetail\app\dashboard\data\model_metrics.csv")
 
     return df
+

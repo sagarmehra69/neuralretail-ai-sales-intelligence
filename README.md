@@ -48,21 +48,133 @@ NeuralRetail AI transforms raw retail transaction data into actionable business 
 
 # 🏗️ System Architecture
 
-Retail Dataset
-↓
-Data Cleaning & Preprocessing
-↓
-Feature Engineering
-↓
-Machine Learning Models
-↓
-Forecast / Churn / Inventory Outputs
-↓
-CSV Data Pipeline
-↓
-Streamlit Dashboard
-↓
-Business Intelligence & Monitoring
+# 🏗️ NeuralRetail AI — System Architecture
+
+```text
+                                      ┌──────────────────────────┐
+                                      │   Retail Transaction     │
+                                      │        Dataset           │
+                                      └────────────┬─────────────┘
+                                                   │
+                                                   ▼
+                         ┌─────────────────────────────────────────┐
+                         │      Data Cleaning & Preprocessing      │
+                         │-----------------------------------------│
+                         │ • Missing Value Handling                │
+                         │ • Outlier Detection                     │
+                         │ • Datetime Processing                   │
+                         │ • Feature Standardization               │
+                         └────────────┬────────────────────────────┘
+                                      │
+                                      ▼
+                     ┌──────────────────────────────────────────────┐
+                     │           Feature Engineering                │
+                     │----------------------------------------------│
+                     │ • Lag Features                               │
+                     │ • Rolling Mean / Std                         │
+                     │ • RFM Analysis                               │
+                     │ • EOQ Calculations                           │
+                     │ • Inventory Risk Features                    │
+                     │ • Time-Series Aggregation                    │
+                     └────────────┬─────────────────────────────────┘
+                                  │
+         ┌────────────────────────┼────────────────────────┐
+         │                        │                        │
+         ▼                        ▼                        ▼
+
+┌─────────────────┐    ┌────────────────────┐    ┌────────────────────┐
+│ Demand Forecast │    │ Customer Analytics │    │ Inventory Analytics│
+│-----------------│    │--------------------│    │--------------------│
+│ Prophet         │    │ Churn Prediction   │    │ EOQ Analysis       │
+│ XGBoost         │    │ RFM Segmentation   │    │ Reorder Monitoring │
+│ Forecast KPIs   │    │ Risk Scoring       │    │ Risk Scoring       │
+└────────┬────────┘    └─────────┬──────────┘    └─────────┬──────────┘
+         │                       │                         │
+         └───────────────────────┼─────────────────────────┘
+                                 │
+                                 ▼
+
+               ┌──────────────────────────────────┐
+               │      Model Evaluation Layer      │
+               │----------------------------------│
+               │ • MAPE                           │
+               │ • RMSE                           │
+               │ • MAE                            │
+               │ • F1 Score                       │
+               │ • Drift Monitoring               │
+               │ • Champion Model Selection       │
+               └──────────────┬───────────────────┘
+                              │
+                              ▼
+
+               ┌──────────────────────────────────┐
+               │       Data Export Pipeline       │
+               │----------------------------------│
+               │ • forecast_results.csv           │
+               │ • churn_predictions.csv          │
+               │ • inventory_risk.csv             │
+               │ • model_metrics.csv              │
+               └──────────────┬───────────────────┘
+                              │
+                              ▼
+
+               ┌──────────────────────────────────┐
+               │       Streamlit Dashboard        │
+               │----------------------------------│
+               │ • Executive Overview             │
+               │ • Forecasting Intelligence       │
+               │ • Customer Intelligence          │
+               │ • Inventory Intelligence         │
+               │ • MLOps Monitoring               │
+               └──────────────┬───────────────────┘
+                              │
+                              ▼
+
+               ┌──────────────────────────────────┐
+               │        Business Intelligence      │
+               │----------------------------------│
+               │ • Sales Insights                 │
+               │ • Churn Detection                │
+               │ • Inventory Optimization         │
+               │ • AI Monitoring                  │
+               │ • Operational Analytics          │
+               └──────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════
+
+                        ⚙️ MLOps Monitoring Layer
+
+═══════════════════════════════════════════════════════════════════════
+
+┌──────────────────────┐
+│ MLflow Tracking      │
+│----------------------│
+│ • Experiment Logging │
+│ • Model Metrics      │
+│ • Artifact Tracking  │
+└──────────┬───────────┘
+           │
+           ▼
+
+┌──────────────────────┐
+│ Drift Monitoring     │
+│----------------------│
+│ • Data Drift         │
+│ • KPI Monitoring     │
+│ • Performance Drift  │
+└──────────┬───────────┘
+           │
+           ▼
+
+┌──────────────────────┐
+│ Deployment Ready     │
+│----------------------│
+│ • Streamlit UI       │
+│ • Multi-page App     │
+│ • Modular Loaders    │
+│ • Real-time KPIs     │
+└──────────────────────┘
 
 ---
 
@@ -195,7 +307,7 @@ Churn classification
 Customer segmentation
 Risk scoring
 Inventory Intelligence Pipeline
-EOQ calculation
+EOQ calculation  
 Reorder point analysis
 Inventory risk scoring
 Inventory optimization

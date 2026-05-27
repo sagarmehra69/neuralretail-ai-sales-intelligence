@@ -20,3 +20,5 @@ optuna
 ipykernel
 jupyterlab
 notebook
+streamlit
+joblib

@@ -23,17 +23,19 @@ METRIC CARDS
 
 [data-testid="metric-container"] {
 
-    background-color: #1E1E1E;
+    background: white;
 
-    border: 1px solid #333333;
+    border-radius: 18px;
 
-    padding: 20px;
+    padding: 22px;
 
-    border-radius: 15px;
+    border-top: 5px solid #F7941D;
 
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    box-shadow:
+        0px 6px 18px rgba(0,0,0,0.08);
+
+    transition: 0.3s ease;
 }
-
 /* =========================================================
 SIDEBAR
 ========================================================= */

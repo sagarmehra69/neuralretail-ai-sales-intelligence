@@ -1,4 +1,3 @@
-Model,Metric,Score
-XGBoost Forecast,MAPE,21.45
-Prophet Forecast,MAPE,30.75
-Churn Model,ROC-AUC,0.91
+Model,Metric,Value
+Prophet Forecast,MAPE,72.23
+Churn Model,ROC-AUC,1.0

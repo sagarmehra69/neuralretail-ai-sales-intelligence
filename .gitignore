@@ -54,9 +54,6 @@ dist/
 temp/
 tmp/
 
-# Data files
-app/dashboard/data/*.csv
-*.csv
 
 # Python
 .venv/

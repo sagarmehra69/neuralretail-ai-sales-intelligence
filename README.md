@@ -6,7 +6,9 @@ NeuralRetail AI transforms raw retail transaction data into actionable business 
 
 ---
 
-[https://neuralretail-ai-sales-intelligence.streamlit.app/]
+## 🌐 Live Dashboard
+ [![Live App](https://img.shields.io/badge/Live-Dashboard-success?style=for-the-badge&logo=streamlit)](https://neuralretail-ai-sales-intelligence.streamlit.app/)
+
 
 # 🚀 Key Features
 

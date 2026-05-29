@@ -6,6 +6,8 @@ NeuralRetail AI transforms raw retail transaction data into actionable business 
 
 ---
 
+[https://neuralretail-ai-sales-intelligence.streamlit.app/]
+
 # 🚀 Key Features
 
 ## 📈 Demand Forecasting

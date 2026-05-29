@@ -28,13 +28,16 @@ inventory_df = load_inventory_data()
 # =========================================================
 # KPI SECTION
 # =========================================================
+top_inventory = inventory_df.sort_values(
+    by="Inventory_Risk_Score", ascending=False
+).head(20)
 
 total_products = len(inventory_df)
 
 avg_risk = inventory_df["Inventory_Risk_Score"].mean()
 
 reorder_alerts = len(
-    inventory_df[inventory_df["current_stock"] < inventory_df["ReorderPoint"]]
+    inventory_df[inventory_df["current_stock"] < inventory_df["Reorder_Point"]]
 )
 
 col1, col2, col3 = st.columns(3)
@@ -60,6 +63,14 @@ fig = px.histogram(inventory_df, x="Inventory_Risk_Score", nbins=30)
 
 st.plotly_chart(fig, use_container_width=True)
 
+
+fig = px.bar(
+    top_inventory,
+    x="product",
+    y=["current_stock", "Reorder_Point"],
+    barmode="group",
+    title="Top 20 High-Risk Products",
+)
 # =========================================================
 # STOCK VS REORDER POINT
 # =========================================================
@@ -71,7 +82,7 @@ st.subheader("📉 Current Stock vs Reorder Point")
 sample_df = inventory_df.head(30)
 
 fig2 = px.bar(
-    sample_df, x="product", y=["current_stock", "ReorderPoint"], barmode="group"
+    sample_df, x="product", y=["current_stock", "Reorder_Point"], barmode="group"
 )
 
 st.plotly_chart(fig2, use_container_width=True)

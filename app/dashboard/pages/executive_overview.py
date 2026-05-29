@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
 
 from utils.loader import (
     load_forecast_data,
@@ -68,7 +69,21 @@ st.markdown("---")
 
 st.subheader("📈 Sales Forecast Trend")
 
-fig1 = px.line(forecast_df, x="Date", y=["Actual_Sales", "Predicted_Sales"])
+fig1 = go.Figure()
+
+fig1.add_trace(
+    go.Scatter(
+        x=forecast_df["Date"], y=forecast_df["Actual_Sales"], name="Actual Sales"
+    )
+)
+
+fig1.add_trace(
+    go.Scatter(
+        x=forecast_df["Date"],
+        y=forecast_df["Forecasted_Sales"],
+        name="Forecasted Sales",
+    )
+)
 
 st.plotly_chart(fig1, use_container_width=True)
 

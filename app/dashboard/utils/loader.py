@@ -2,6 +2,9 @@ import pandas as pd
 import streamlit as st
 from pathlib import Path
 
+
+st.cache_data.clear()
+
 # =========================================================
 # BASE DATA PATH
 # =========================================================
@@ -10,6 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATA_DIR = BASE_DIR / "data"
 
+print(DATA_DIR)
 # =========================================================
 # FORECAST DATA
 # =========================================================

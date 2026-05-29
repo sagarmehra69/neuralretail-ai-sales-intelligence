@@ -34,7 +34,7 @@ total_products = len(inventory_df)
 avg_risk = inventory_df["Inventory_Risk_Score"].mean()
 
 reorder_alerts = len(
-    inventory_df[inventory_df["current_stock"] < inventory_df["Reorder_Point"]]
+    inventory_df[inventory_df["current_stock"] < inventory_df["ReorderPoint"]]
 )
 
 col1, col2, col3 = st.columns(3)
@@ -71,7 +71,7 @@ st.subheader("📉 Current Stock vs Reorder Point")
 sample_df = inventory_df.head(30)
 
 fig2 = px.bar(
-    sample_df, x="product", y=["current_stock", "Reorder_Point"], barmode="group"
+    sample_df, x="product", y=["current_stock", "ReorderPoint"], barmode="group"
 )
 
 st.plotly_chart(fig2, use_container_width=True)

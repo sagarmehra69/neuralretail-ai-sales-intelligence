@@ -140,7 +140,8 @@ NeuralRetail AI transforms raw retail transaction data into actionable business 
                │ • Operational Analytics          │
                └──────────────────────────────────┘
 
-
+```
+```text
 ═══════════════════════════════════════════════════════════════════════
 
                         ⚙️ MLOps Monitoring Layer
@@ -175,7 +176,7 @@ NeuralRetail AI transforms raw retail transaction data into actionable business 
 │ • Modular Loaders    │
 │ • Real-time KPIs     │
 └──────────────────────┘
-
+```
 ---
 
 # 📊 Dashboard Modules
@@ -312,15 +313,17 @@ Reorder point analysis
 Inventory risk scoring
 Inventory optimization
 
-📡 MLOps Capabilities
+---
+
+# 📡 MLOps Capabilities
 Model monitoring
 Performance tracking
 Drift monitoring
 Pipeline health monitoring
 Metrics visualization
 Deployment-ready architecture
-
-🎯 Business Impact
+---
+# 🎯 Business Impact
 
 NeuralRetail AI helps retailers:
 
@@ -330,8 +333,9 @@ Detect customer churn early
 Optimize inventory operations
 Improve operational visibility
 Enable AI-driven retail decisions
+---
 
-🚀 Running the Dashboard
+# 🚀 Running the Dashboard
 
 Clone Repository
 
@@ -344,8 +348,8 @@ Run Streamlit Dashboard
 cd app/dashboard
 
 streamlit run app.py
-
-🔮 Future Improvements
+---
+# 🔮 Future Improvements
 
 Real-time streaming pipelines
 Kafka integration
@@ -357,7 +361,8 @@ Automated retraining
 Real-time drift detection
 API integration
 Role-based dashboard access
-📌 Project Status
+---
+# 📌 Project Status
 
 Forecasting Intelligence ✅ Completed
 Customer Intelligence ✅ Completed
@@ -365,10 +370,11 @@ Inventory Intelligence ✅ Completed
 Dashboard Integration ✅ Completed
 MLOps Monitoring ✅ Completed
 Enterprise Dashboard UI ✅ Completed
+---
 
-👨‍💻 Author
+# 👨‍💻 Author
 Sagar Mehra
-
+---
 AI & Data Science Enthusiast
 
 Focused on:
@@ -377,8 +383,9 @@ Machine Learning
 Forecasting Systems
 MLOps
 Enterprise AI Platforms
-⭐ If You Like This Project
+
+# ⭐ If You Like This Project
 
 Give this repository a ⭐ on GitHub and support the project.
-
+---
 

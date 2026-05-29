@@ -1,3 +1,4 @@
 Model,Metric,Value
-Prophet Forecast,MAPE,72.23
+Prophet Forecast,MAPE,24.16
+XGBoost Forecast,WMAPE,17.57
 Churn Model,ROC-AUC,1.0

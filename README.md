@@ -48,7 +48,8 @@ NeuralRetail AI transforms raw retail transaction data into actionable business 
 
 # 🏗️ System Architecture
 
-![Uploading NuralRetail.png…]()
+<img width="1376" height="768" alt="NuralRetail" src="https://github.com/user-attachments/assets/222fa859-391d-415b-8eb0-5113de87b9dc" />
+
 
 ---
 

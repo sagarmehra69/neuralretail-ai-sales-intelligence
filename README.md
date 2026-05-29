@@ -48,6 +48,10 @@ NeuralRetail AI transforms raw retail transaction data into actionable business 
 
 # 🏗️ System Architecture
 
+![Uploading NuralRetail.png…]()
+
+---
+
 # 🏗️ NeuralRetail AI — System Architecture
 
 ```text
@@ -361,7 +365,9 @@ Automated retraining
 Real-time drift detection
 API integration
 Role-based dashboard access
+
 ---
+
 # 📌 Project Status
 
 Forecasting Intelligence ✅ Completed
@@ -370,10 +376,12 @@ Inventory Intelligence ✅ Completed
 Dashboard Integration ✅ Completed
 MLOps Monitoring ✅ Completed
 Enterprise Dashboard UI ✅ Completed
+
 ---
 
 # 👨‍💻 Author
 Sagar Mehra
+
 ---
 AI & Data Science Enthusiast
 
@@ -387,5 +395,6 @@ Enterprise AI Platforms
 # ⭐ If You Like This Project
 
 Give this repository a ⭐ on GitHub and support the project.
+
 ---
 

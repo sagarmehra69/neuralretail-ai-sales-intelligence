@@ -5,19 +5,14 @@ from utils.loader import (
     load_forecast_data,
     load_churn_data,
     load_inventory_data,
-    load_model_metrics
+    load_model_metrics,
 )
 
 # =========================================================
 # PAGE CONFIG
 # =========================================================
 
-st.set_page_config(
-
-    page_title="Executive Overview",
-
-    layout="wide"
-)
+st.set_page_config(page_title="Executive Overview", layout="wide")
 
 # =========================================================
 # LOAD DATA
@@ -45,51 +40,25 @@ Enterprise AI-powered retail intelligence and forecasting platform.
 # GLOBAL KPIs
 # =========================================================
 
-latest_sales = forecast_df['Actual_Sales'].iloc[-1]
-
-avg_churn = churn_df['Churn_Probability'].mean()
-
-inventory_risk = inventory_df['Inventory_Risk_Score'].mean()
-
+latest_sales = forecast_df["Actual_Sales"].iloc[-1]
+latest_forecast = forecast_df["Forecasted_Sales"].iloc[-1]
+avg_churn = churn_df["Churn_Probability"].mean()
+inventory_risk = inventory_df["Inventory_Risk_Score"].mean()
 total_products = len(inventory_df)
 
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-
-    st.metric(
-
-        "Latest Sales",
-
-        f"{latest_sales:,.0f}"
-    )
+    st.metric("Latest Sales", f"{latest_sales:,.0f}")
 
 with col2:
-
-    st.metric(
-
-        "Avg Churn Risk",
-
-        f"{avg_churn:.2f}"
-    )
+    st.metric("Avg Churn Risk", f"{avg_churn:.2f}")
 
 with col3:
-
-    st.metric(
-
-        "Inventory Risk",
-
-        f"{inventory_risk:.2f}"
-    )
+    st.metric("Inventory Risk", f"{inventory_risk:.2f}")
 
 with col4:
-
-    st.metric(
-
-        "Products Tracked",
-
-        total_products
-    )
+    st.metric("Products Tracked", total_products)
 
 # =========================================================
 # SALES TREND
@@ -99,26 +68,9 @@ st.markdown("---")
 
 st.subheader("📈 Sales Forecast Trend")
 
-fig1 = px.line(
+fig1 = px.line(forecast_df, x="Date", y=["Actual_Sales", "Predicted_Sales"])
 
-    forecast_df,
-
-    x='Date',
-
-    y=[
-
-        'Actual_Sales',
-
-        'Predicted_Sales'
-    ]
-)
-
-st.plotly_chart(
-
-    fig1,
-
-    use_container_width=True
-)
+st.plotly_chart(fig1, use_container_width=True)
 
 # =========================================================
 # CHURN DISTRIBUTION
@@ -128,21 +80,9 @@ st.markdown("---")
 
 st.subheader("👥 Customer Churn Distribution")
 
-fig2 = px.histogram(
+fig2 = px.histogram(churn_df, x="Churn_Probability", nbins=30)
 
-    churn_df,
-
-    x='Churn_Probability',
-
-    nbins=30
-)
-
-st.plotly_chart(
-
-    fig2,
-
-    use_container_width=True
-)
+st.plotly_chart(fig2, use_container_width=True)
 
 # =========================================================
 # INVENTORY RISK
@@ -152,21 +92,9 @@ st.markdown("---")
 
 st.subheader("📦 Inventory Risk Overview")
 
-fig3 = px.histogram(
+fig3 = px.histogram(inventory_df, x="Inventory_Risk_Score", nbins=30)
 
-    inventory_df,
-
-    x='Inventory_Risk_Score',
-
-    nbins=30
-)
-
-st.plotly_chart(
-
-    fig3,
-
-    use_container_width=True
-)
+st.plotly_chart(fig3, use_container_width=True)
 
 # =========================================================
 # MODEL PERFORMANCE
@@ -176,12 +104,7 @@ st.markdown("---")
 
 st.subheader("⚙️ Model Performance Metrics")
 
-st.dataframe(
-
-    metrics_df,
-
-    use_container_width=True
-)
+st.dataframe(metrics_df, use_container_width=True)
 
 # =========================================================
 # SYSTEM STATUS
@@ -197,6 +120,4 @@ st.success("✅ All AI systems operational")
 
 st.markdown("---")
 
-st.caption(
-    "NeuralRetail AI • Executive Command Center"
-)
+st.caption("NeuralRetail AI • Executive Command Center")

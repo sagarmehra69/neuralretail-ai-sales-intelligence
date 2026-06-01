@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
+from utils.chart_theme import apply_dark_theme
 from utils.loader import (
     load_forecast_data,
     load_churn_data,
@@ -84,6 +85,7 @@ fig1.add_trace(
         name="Forecasted Sales",
     )
 )
+fig1 = apply_dark_theme(fig1)
 
 st.plotly_chart(fig1, use_container_width=True)
 
@@ -96,6 +98,7 @@ st.markdown("---")
 st.subheader("👥 Customer Churn Distribution")
 
 fig2 = px.histogram(churn_df, x="Churn_Probability", nbins=30)
+fig2 = apply_dark_theme(fig2)
 
 st.plotly_chart(fig2, use_container_width=True)
 
@@ -108,6 +111,7 @@ st.markdown("---")
 st.subheader("📦 Inventory Risk Overview")
 
 fig3 = px.histogram(inventory_df, x="Inventory_Risk_Score", nbins=30)
+fig3 = apply_dark_theme(fig3)
 
 st.plotly_chart(fig3, use_container_width=True)
 

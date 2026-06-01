@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 
 from utils.loader import load_churn_data
-
+from utils.chart_theme import apply_dark_theme
 # =========================================================
 # PAGE CONFIG
 # =========================================================
@@ -59,7 +59,7 @@ fig = px.histogram(
 )
 
 fig.update_traces(opacity=0.85)
-fig.update_layout(template="plotly_white")
+fig = apply_dark_theme(fig)
 
 st.plotly_chart(fig, use_container_width=True)
 
@@ -76,7 +76,7 @@ segment_counts = churn_df["Segment"].value_counts().reset_index()
 segment_counts.columns = ["Segment", "Count"]
 
 fig2 = px.pie(segment_counts, names="Segment", values="Count", hole=0.4)
-
+fig2 = apply_dark_theme(fig2)
 st.plotly_chart(fig2, use_container_width=True)
 
 # =========================================================

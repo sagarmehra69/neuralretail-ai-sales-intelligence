@@ -68,13 +68,9 @@ Enterprise retail performance and AI-powered business intelligence platform.
 # =========================================================
 
 total_revenue = sales_df["Revenue"].sum()
-
 total_orders = sales_df["InvoiceNo"].nunique()
-
 total_customers = sales_df["CustomerID"].nunique()
-
 total_products = sales_df["StockCode"].nunique()
-
 avg_order_value = total_revenue / total_orders
 
 st.markdown("## 📌 Executive KPIs")

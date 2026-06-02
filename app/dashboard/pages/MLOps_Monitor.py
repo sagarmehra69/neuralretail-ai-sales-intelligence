@@ -7,10 +7,14 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 
+from utils.theme import load_css
+from utils.loader import load_model_metrics
+
 # =========================================================
 # PAGE CONFIG
 # =========================================================
 
+load_css()
 st.set_page_config(page_title="MLOps Monitor", layout="wide")
 
 # =========================================================

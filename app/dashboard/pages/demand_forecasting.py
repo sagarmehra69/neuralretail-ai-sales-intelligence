@@ -1,6 +1,5 @@
-
 # =========================================================
-# NeuralRetail - Demand Forecasting Dashboard
+# NeuralRetail AI - Demand Forecasting Intelligence
 # =========================================================
 
 import streamlit as st
@@ -9,16 +8,17 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
+from utils.theme import load_css
 from utils.loader import load_forecast_data
 from utils.chart_theme import apply_dark_theme
+
 # =========================================================
 # PAGE CONFIG
 # =========================================================
 
-st.set_page_config(
-    page_title="Demand Forecasting Intelligence",
-    layout="wide"
-)
+st.set_page_config(page_title="Demand Forecasting Intelligence", layout="wide")
+
+load_css()
 
 # =========================================================
 # TITLE
@@ -27,7 +27,7 @@ st.set_page_config(
 st.title("📈 Demand Forecasting Intelligence")
 
 st.markdown("""
-AI-powered retail demand forecasting and forecasting analytics dashboard.
+AI-powered retail demand forecasting and sales trend intelligence platform.
 """)
 
 # =========================================================
@@ -37,7 +37,7 @@ AI-powered retail demand forecasting and forecasting analytics dashboard.
 forecast_df = load_forecast_data()
 
 # =========================================================
-# COLUMN STANDARDIZATION
+# STANDARDIZE COLUMNS
 # =========================================================
 
 forecast_df = forecast_df.rename(
@@ -58,101 +58,32 @@ required_cols = [
     "Forecast_Error",
 ]
 
-missing_cols = [
-    col for col in required_cols
-    if col not in forecast_df.columns
-]
+missing_cols = [col for col in required_cols if col not in forecast_df.columns]
 
 if missing_cols:
     st.error(f"Missing columns: {missing_cols}")
+
     st.stop()
 
-
-
 # =========================================================
-# DATA CLEANING
+# DATA PROCESSING
 # =========================================================
+
+forecast_df["Date"] = pd.to_datetime(forecast_df["Date"])
+
+forecast_df = forecast_df.sort_values(by="Date")
 
 forecast_df = forecast_df.dropna()
-
-forecast_df = forecast_df[
-    forecast_df["Actual"] >= 0
-]
-
-forecast_df = forecast_df[
-    forecast_df["Forecast"] >= 0
-]
-
-# =========================================================
-# DATA TYPES
-# =========================================================
-
-forecast_df["Date"] = pd.to_datetime(
-    forecast_df["Date"]
-)
-
-forecast_df = forecast_df.sort_values(
-    by="Date"
-)
 
 # =========================================================
 # FEATURE ENGINEERING
 # =========================================================
 
-# Daily Forecast Accuracy
+forecast_df["Rolling_Actual"] = forecast_df["Actual"].rolling(7).mean()
 
-forecast_df["Daily_Accuracy"] = np.where( 
-    forecast_df["Actual"] != 0,
-    100 - 
-    ( np.abs(forecast_df["Forecast_Error"]) 
-     / forecast_df["Actual"] ) * 100, 0 )
+forecast_df["Rolling_Forecast"] = forecast_df["Forecast"].rolling(7).mean()
 
-forecast_df["Daily_Accuracy"] = (
-    forecast_df["Daily_Accuracy"]
-    .clip(lower=0)
-)
-
-# Rolling Trends
-
-forecast_df["Rolling_Actual"] = (
-    forecast_df["Actual"]
-    .rolling(window=7)
-    .mean()
-)
-
-forecast_df["Rolling_Forecast"] = (
-    forecast_df["Forecast"]
-    .rolling(window=7)
-    .mean()
-)
-
-# Cumulative Trends
-
-forecast_df["Cumulative_Actual"] = (
-    forecast_df["Actual"]
-    .cumsum()
-)
-
-forecast_df["Cumulative_Forecast"] = (
-    forecast_df["Forecast"]
-    .cumsum()
-)
-
-# Weekday Analysis
-
-forecast_df["Day_Name"] = (
-    forecast_df["Date"]
-    .dt.day_name()
-)
-
-# Monthly Analysis
-
-forecast_df["Month"] = (
-    forecast_df["Date"]
-    .dt.strftime("%b")
-)
-
-
+forecast_df["Day_Name"] = forecast_df["Date"].dt.day_name()
 
 # =========================================================
 # SIDEBAR
@@ -168,8 +99,7 @@ forecast_days = st.sidebar.slider(
 )
 
 selected_model = st.sidebar.selectbox(
-    "Forecast Model",
-    ["XGBoost", "Prophet", "LSTM", "Ensemble"]
+    "Forecast Model", ["XGBoost", "Prophet", "LSTM", "Ensemble"]
 )
 
 # =========================================================
@@ -178,74 +108,41 @@ selected_model = st.sidebar.selectbox(
 
 st.markdown("## 📌 Forecasting KPIs")
 
+mape_df = forecast_df[forecast_df["Actual"] != 0]
+
+mape = round((np.mean(np.abs(mape_df["Forecast_Error"]) / mape_df["Actual"])) * 100, 2)
+
+forecast_accuracy = round(100 - mape, 2)
+
+avg_daily_demand = int(forecast_df["Actual"].mean())
+
+forecast_variance = round(forecast_df["Forecast_Error"].std(), 2)
+
 col1, col2, col3, col4 = st.columns(4)
 
-
-mape_df = forecast_df[
-    forecast_df["Actual"] != 0
-]
-
-mape = round(
-    (
-        np.mean(
-            np.abs(
-                mape_df["Forecast_Error"]
-            )
-            / mape_df["Actual"]
-        )
-    ) * 100,
-    2,
-)
-
-accuracy = round(100 - mape, 2)
-
-
-
-avg_actual_sales = int(
-    forecast_df["Actual"].mean()
-)
-
-avg_forecast_sales = int(
-    forecast_df["Forecast"].mean()
-)
-
 with col1:
-    st.metric(
-        "Selected Model",
-        selected_model
-    )
+    st.metric("Forecast Model", selected_model)
 
 with col2:
-    st.metric(
-        "Forecast MAPE",
-        f"{mape}%"
-    )
+    st.metric("Forecast Accuracy", f"{forecast_accuracy}%")
 
 with col3:
-    st.metric(
-        "Forecast Accuracy",
-        f"{accuracy}%"
-    )
+    st.metric("Forecast MAPE", f"{mape}%")
 
 with col4:
-    st.metric(
-        "Avg Daily Demand",
-        f"{avg_actual_sales:,}"
-    )
+    st.metric("Avg Daily Demand", f"{avg_daily_demand:,}")
 
 # =========================================================
-# FORECAST TREND
+# ACTUAL VS FORECAST
 # =========================================================
 
 st.markdown("---")
 
 st.subheader("📊 Actual vs Forecasted Sales")
 
-fig_forecast = go.Figure()
-fig_forecast = apply_dark_theme(fig_forecast)
-# Actual Sales
+fig1 = go.Figure()
 
-fig_forecast.add_trace(
+fig1.add_trace(
     go.Scatter(
         x=forecast_df["Date"],
         y=forecast_df["Actual"],
@@ -254,9 +151,7 @@ fig_forecast.add_trace(
     )
 )
 
-# Forecasted Sales
-
-fig_forecast.add_trace(
+fig1.add_trace(
     go.Scatter(
         x=forecast_df["Date"],
         y=forecast_df["Forecast"],
@@ -265,29 +160,28 @@ fig_forecast.add_trace(
     )
 )
 
-fig_forecast.update_layout(
-    title="Sales Forecast Trend",
+fig1.update_layout(
+    title="Demand Forecast Trend",
     xaxis_title="Date",
     yaxis_title="Sales",
     hovermode="x unified",
 )
 
-st.plotly_chart(
-    fig_forecast,
-    use_container_width=True
-)
+fig1 = apply_dark_theme(fig1)
+
+st.plotly_chart(fig1, use_container_width=True)
 
 # =========================================================
-# ROLLING TREND ANALYSIS
+# ROLLING FORECAST TREND
 # =========================================================
 
 st.markdown("---")
 
-st.subheader("📈 7-Day Rolling Forecast Trend")
+st.subheader("📈 Rolling Forecast Trend")
 
-fig_rolling = go.Figure()
-fig_rolling = apply_dark_theme(fig_rolling)
-fig_rolling.add_trace(
+fig2 = go.Figure()
+
+fig2.add_trace(
     go.Scatter(
         x=forecast_df["Date"],
         y=forecast_df["Rolling_Actual"],
@@ -296,7 +190,7 @@ fig_rolling.add_trace(
     )
 )
 
-fig_rolling.add_trace(
+fig2.add_trace(
     go.Scatter(
         x=forecast_df["Date"],
         y=forecast_df["Rolling_Forecast"],
@@ -305,16 +199,15 @@ fig_rolling.add_trace(
     )
 )
 
-fig_rolling.update_layout(
-    title="Rolling Forecast Trend",
+fig2.update_layout(
+    title="7-Day Rolling Forecast Analysis",
     xaxis_title="Date",
     yaxis_title="Sales",
 )
 
-st.plotly_chart(
-    fig_rolling,
-    use_container_width=True
-)
+fig2 = apply_dark_theme(fig2)
+
+st.plotly_chart(fig2, use_container_width=True)
 
 # =========================================================
 # FORECAST ERROR ANALYSIS
@@ -322,74 +215,28 @@ st.plotly_chart(
 
 st.markdown("---")
 
-st.subheader("📉 Forecast Error Analysis")
+st.subheader("📉 Forecast Error Trend")
 
-fig_error = px.line(
+fig3 = px.line(
     forecast_df,
     x="Date",
     y="Forecast_Error",
     title="Forecast Error Over Time",
 )
-fig_error = apply_dark_theme(fig_error)
-st.plotly_chart(
-    fig_error,
-    use_container_width=True
-)
+
+fig3 = apply_dark_theme(fig3)
+
+st.plotly_chart(fig3, use_container_width=True)
 
 # =========================================================
-# DAILY FORECAST ACCURACY
-# =========================================================
-
-st.markdown("---")
-
-st.subheader("🎯 Daily Forecast Accuracy")
-
-fig_accuracy = px.line(
-    forecast_df,
-    x="Date",
-    y="Daily_Accuracy",
-    title="Daily Forecast Accuracy Trend",
-)
-fig_accuracy = apply_dark_theme(fig_accuracy)
-st.plotly_chart(
-    fig_accuracy,
-    use_container_width=True
-)
-
-# =========================================================
-# RESIDUAL DISTRIBUTION
-# =========================================================
-
-st.markdown("---")
-
-st.subheader("📦 Forecast Residual Distribution")
-
-fig_hist = px.histogram(
-    forecast_df,
-    x="Forecast_Error",
-    nbins=30,
-    title="Forecast Error Distribution",
-)
-fig_hist = apply_dark_theme(fig_hist)
-st.plotly_chart(
-    fig_hist,
-    use_container_width=True
-)
-
-# =========================================================
-# WEEKDAY DEMAND ANALYSIS
+# WEEKLY DEMAND PATTERN
 # =========================================================
 
 st.markdown("---")
 
 st.subheader("📅 Weekly Demand Pattern")
 
-weekday_sales = (
-    forecast_df
-    .groupby("Day_Name")["Actual"]
-    .mean()
-    .reset_index()
-)
+weekday_sales = forecast_df.groupby("Day_Name")["Actual"].mean().reset_index()
 
 weekday_order = [
     "Monday",
@@ -402,127 +249,47 @@ weekday_order = [
 ]
 
 weekday_sales["Day_Name"] = pd.Categorical(
-    weekday_sales["Day_Name"],
-    categories=weekday_order,
-    ordered=True,
+    weekday_sales["Day_Name"], categories=weekday_order, ordered=True
 )
 
-weekday_sales = weekday_sales.sort_values(
-    by="Day_Name"
-)
+weekday_sales = weekday_sales.sort_values(by="Day_Name")
 
-fig_weekday = px.bar(
+fig4 = px.bar(
     weekday_sales,
     x="Day_Name",
     y="Actual",
-    title="Average Sales by Weekday",
+    title="Average Demand by Weekday",
 )
-fig_weekday = apply_dark_theme(fig_weekday)
-st.plotly_chart(
-    fig_weekday,
-    use_container_width=True
-)
+
+fig4 = apply_dark_theme(fig4)
+
+st.plotly_chart(fig4, use_container_width=True)
 
 # =========================================================
-# MONTHLY SALES TREND
-# =========================================================
-
-st.markdown("---")
-
-st.subheader("📆 Monthly Sales Trend")
-
-monthly_sales = (
-    forecast_df
-    .groupby("Month")["Actual"]
-    .mean()
-    .reset_index()
-)
-
-fig_monthly = px.line(
-    monthly_sales,
-    x="Month",
-    y="Actual",
-    markers=True,
-    title="Average Monthly Sales",
-)
-fig_monthly = apply_dark_theme(fig_monthly)
-st.plotly_chart(
-    fig_monthly,
-    use_container_width=True
-)
-
-# =========================================================
-# CUMULATIVE FORECAST TREND
+# AI FORECAST INSIGHTS
 # =========================================================
 
 st.markdown("---")
 
-st.subheader("📊 Cumulative Sales vs Forecast")
+st.subheader("🧠 AI Forecast Insights")
 
-fig_cumulative = go.Figure()
+highest_day = weekday_sales.sort_values(by="Actual", ascending=False).iloc[0][
+    "Day_Name"
+]
 
-fig_cumulative.add_trace(
-    go.Scatter(
-        x=forecast_df["Date"],
-        y=forecast_df["Cumulative_Actual"],
-        mode="lines",
-        name="Cumulative Actual",
-    )
-)
+lowest_day = weekday_sales.sort_values(by="Actual", ascending=True).iloc[0]["Day_Name"]
 
-fig_cumulative.add_trace(
-    go.Scatter(
-        x=forecast_df["Date"],
-        y=forecast_df["Cumulative_Forecast"],
-        mode="lines",
-        name="Cumulative Forecast",
-    )
-)
+st.info(f"""
+• Forecast model currently operating at {forecast_accuracy}% accuracy
 
-fig_cumulative.update_layout(
-    title="Cumulative Forecast Performance",
-    xaxis_title="Date",
-    yaxis_title="Cumulative Sales",
-)
-fig_cumulative = apply_dark_theme(fig_cumulative)
-st.plotly_chart(
-    fig_cumulative,
-    use_container_width=True
-)
+• Average daily demand is {avg_daily_demand:,} units
 
-# =========================================================
-# ACTUAL VS FORECAST SCATTER
-# =========================================================
+• Highest demand observed on {highest_day}
 
-st.markdown("---")
+• Lowest demand observed on {lowest_day}
 
-st.subheader("🔍 Actual vs Forecast Scatter")
-
-fig_scatter = px.scatter(
-    forecast_df,
-    x="Actual",
-    y="Forecast",
-    trendline="ols",
-    title="Actual vs Forecasted Sales",
-)
-fig_scatter = apply_dark_theme(fig_scatter)
-st.plotly_chart(
-    fig_scatter,
-    use_container_width=True
-)
-
-# =========================================================
-# FORECAST TABLE
-# =========================================================
-
-st.markdown("---")
-
-st.subheader("📋 Forecast Data")
-
-st.dataframe(
-    forecast_df.tail(forecast_days),
-    use_container_width=True,
-)
+• Forecast volatility score: {forecast_variance}
+""")
 
 # =========================================================
 # FOOTER
@@ -530,7 +297,4 @@ st.dataframe(
 
 st.markdown("---")
 
-st.caption(
-    "NeuralRetail AI • Demand Forecasting Intelligence • Amdox Technologies"
-)
-
+st.caption("NeuralRetail AI • Demand Forecasting Intelligence • Amdox Technologies")

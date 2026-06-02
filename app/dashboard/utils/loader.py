@@ -55,3 +55,16 @@ def load_inventory_data():
 def load_model_metrics():
 
     return pd.read_csv(DATA_DIR / "model_metrics.csv")
+
+
+# =========================================================
+# LOAD SALES DATA
+# =========================================================
+
+
+@st.cache_data
+def load_sales_data():
+
+    df = pd.read_csv(DATA_DIR / "cleaned_retail_data.csv")
+
+    return df

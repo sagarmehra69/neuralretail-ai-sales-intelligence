@@ -70,9 +70,7 @@ if missing_cols:
 # =========================================================
 
 forecast_df["Date"] = pd.to_datetime(forecast_df["Date"])
-
 forecast_df = forecast_df.sort_values(by="Date")
-
 forecast_df = forecast_df.dropna()
 
 # =========================================================
@@ -80,9 +78,7 @@ forecast_df = forecast_df.dropna()
 # =========================================================
 
 forecast_df["Rolling_Actual"] = forecast_df["Actual"].rolling(7).mean()
-
 forecast_df["Rolling_Forecast"] = forecast_df["Forecast"].rolling(7).mean()
-
 forecast_df["Day_Name"] = forecast_df["Date"].dt.day_name()
 
 # =========================================================
@@ -109,13 +105,9 @@ selected_model = st.sidebar.selectbox(
 st.markdown("## 📌 Forecasting KPIs")
 
 mape_df = forecast_df[forecast_df["Actual"] != 0]
-
 mape = round((np.mean(np.abs(mape_df["Forecast_Error"]) / mape_df["Actual"])) * 100, 2)
-
 forecast_accuracy = round(100 - mape, 2)
-
 avg_daily_demand = int(forecast_df["Actual"].mean())
-
 forecast_variance = round(forecast_df["Forecast_Error"].std(), 2)
 
 col1, col2, col3, col4 = st.columns(4)
@@ -164,6 +156,7 @@ fig1.update_layout(
     title="Demand Forecast Trend",
     xaxis_title="Date",
     yaxis_title="Sales",
+    colorway=["#2C71E1", "#F97316"],
     hovermode="x unified",
 )
 
@@ -202,6 +195,7 @@ fig2.add_trace(
 fig2.update_layout(
     title="7-Day Rolling Forecast Analysis",
     xaxis_title="Date",
+    colorway=["#2C71E1", "#F97316"],
     yaxis_title="Sales",
 )
 
@@ -221,6 +215,7 @@ fig3 = px.line(
     forecast_df,
     x="Date",
     y="Forecast_Error",
+    color_discrete_sequence=["#F97316"],
     title="Forecast Error Over Time",
 )
 

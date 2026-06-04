@@ -1,4 +1,3 @@
-Model,Metric,Value
-Prophet Forecast,MAPE,24.16
-XGBoost Forecast,WMAPE,17.57
-Churn Model,ROC-AUC,1.0
+version https://git-lfs.github.com/spec/v1
+oid sha256:d65de1e933ea3c7c39676c296f0e4cf0835448a49ee1dec2fbaed5cd3392d975
+size 104

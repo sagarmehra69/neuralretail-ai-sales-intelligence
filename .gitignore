@@ -91,3 +91,20 @@ __pycache__/
 
 # Virtual Env
 .venv/
+
+# Large data
+data/
+*.csv
+
+# Models
+*.pkl
+
+# MLflow
+mlruns/
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+.venv/

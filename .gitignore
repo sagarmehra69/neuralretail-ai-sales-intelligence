@@ -74,3 +74,20 @@ __pycache__/
 
 app/dashboard/data/cleaned_retail_data.csv
 app/dashboard/utils/theme.py
+
+# Data
+data/
+*.csv
+
+# Models
+*.pkl
+
+# MLflow
+mlruns/
+
+# Cache
+__pycache__/
+*.pyc
+
+# Virtual Env
+.venv/

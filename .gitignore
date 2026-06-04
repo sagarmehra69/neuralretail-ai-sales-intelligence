@@ -72,7 +72,6 @@ __pycache__/
 *.h5
 *.parquet
 
-app/dashboard/data/cleaned_retail_data.csv
 app/dashboard/utils/theme.py
 
 # Data

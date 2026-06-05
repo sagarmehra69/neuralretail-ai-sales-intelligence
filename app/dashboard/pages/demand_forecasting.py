@@ -9,10 +9,13 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
+from auth_guard import check_auth
 from utils.theme import load_css
 from utils.loader import load_forecast_data
 from utils.chart_theme import apply_dark_theme
 
+
+check_auth()
 # =========================================================
 # LOAD CSS
 # =========================================================

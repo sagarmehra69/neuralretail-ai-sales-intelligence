@@ -1,0 +1,20 @@
+credentials:
+  usernames:
+    admin:
+      email: admin@neuralretail.ai
+      name: Admin User
+      password: admin123
+
+    viewer:
+      email: viewer@neuralretail.ai
+      name: Viewer User
+      password: viewer123
+
+cookie:
+  expiry_days: 7
+  key: neuralretail_cookie_key
+  name: neuralretail_cookie
+
+preauthorized:
+  emails:
+    - admin@neuralretail.ai

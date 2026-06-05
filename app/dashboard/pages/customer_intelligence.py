@@ -7,9 +7,13 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+from auth_guard import check_auth
 from utils.theme import load_css
 from utils.loader import load_churn_data
 from utils.chart_theme import apply_dark_theme
+
+check_auth()
+
 
 # =========================================================
 # LOAD STYLES

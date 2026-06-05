@@ -1,8 +1,10 @@
 import streamlit as st
 import requests
 
+from auth_guard import check_auth
 from utils.theme import load_css
 
+check_auth()
 load_css()
 
 st.set_page_config(page_title="Live Churn Prediction", page_icon="⚠️", layout="wide")

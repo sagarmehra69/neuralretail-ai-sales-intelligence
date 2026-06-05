@@ -5,7 +5,10 @@
 # =========================================================
 
 import streamlit as st
+from login import authenticate_user
 
+if not authenticate_user():
+    st.stop()
 # =========================================================
 # PAGE CONFIG
 # =========================================================

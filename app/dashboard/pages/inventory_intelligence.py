@@ -9,10 +9,12 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+from auth_guard import check_auth
 from utils.theme import load_css
 from utils.chart_theme import apply_dark_theme
 from utils.loader import load_inventory_data
 
+check_auth()
 # =========================================================
 # PAGE CONFIG
 # =========================================================

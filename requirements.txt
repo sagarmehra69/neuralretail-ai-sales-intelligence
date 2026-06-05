@@ -9,3 +9,5 @@ matplotlib
 seaborn
 mlflow
 statsmodels
+streamlit_authenticator
+bcrypt

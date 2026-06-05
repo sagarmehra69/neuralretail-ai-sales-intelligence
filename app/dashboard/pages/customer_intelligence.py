@@ -1,3 +1,623 @@
+# # =========================================================
+# # NeuralRetail AI — Customer Intelligence
+# # Amdox Technologies
+# # =========================================================
+
+# import streamlit as st
+# import pandas as pd
+# import plotly.express as px
+# import tempfile
+# import io
+
+
+# from auth_guard import check_auth
+# from utils.theme import load_css
+# from utils.loader import load_churn_data
+# from utils.chart_theme import apply_dark_theme
+# from reportlab.platypus import (
+#     SimpleDocTemplate,
+#     Table,
+#     TableStyle,
+#     Paragraph,
+#     Spacer 
+# )
+
+# from reportlab.lib import colors
+# from reportlab.lib.pagesizes import letter
+# from reportlab.lib.styles import getSampleStyleSheet
+
+# load_css()
+# check_auth()
+
+
+# # =========================================================
+# # PAGE HEADER
+# # =========================================================
+
+# st.title("🧠 Customer Intelligence")
+
+# st.markdown("""
+# Advanced AI-powered customer intelligence platform for segmentation,
+# churn analysis, retention targeting, and customer value optimization.
+# """)
+
+# # =========================================================
+# # LOAD DATA
+# # =========================================================
+
+# churn_df = load_churn_data()
+
+# # =========================================================
+# # SIDEBAR FILTERS
+# # =========================================================
+
+# st.sidebar.header("🎯 Customer Filters")
+
+# selected_segments = st.sidebar.multiselect(
+#     "Select Customer Segment",
+#     options=sorted(churn_df["Segment"].unique()),
+#     default=sorted(churn_df["Segment"].unique())
+# )
+
+# risk_range = st.sidebar.slider(
+#     "Churn Probability Range",
+#     min_value=0.0,
+#     max_value=1.0,
+#     value=(0.0, 1.0)
+# )
+
+# filtered_df = churn_df[
+#     (churn_df["Segment"].isin(selected_segments)) &
+#     (churn_df["Churn_Probability"] >= risk_range[0]) &
+#     (churn_df["Churn_Probability"] <= risk_range[1])
+# ]
+
+# # =========================================================
+# # EXCEL EXPORT
+# # =========================================================
+
+
+
+# excel_buffer = io.BytesIO()
+
+# with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
+#     filtered_df.to_excel(
+#         writer,
+#         index=False,
+#         sheet_name="Churn_Report"
+#     )
+
+# excel_data = excel_buffer.getvalue()
+
+# st.download_button(
+#     label="📥 Download Churn Report (Excel)",
+#     data=excel_data,
+#     file_name="churn_report.xlsx",
+#     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+# )
+
+# # =========================================================
+# # PDF EXPORT
+# # =========================================================
+
+# if st.button("📄 Generate PDF Report"):
+
+#     with tempfile.NamedTemporaryFile(
+#         delete=False,
+#         suffix=".pdf"
+#     ) as tmpfile:
+
+#         pdf_path = tmpfile.name
+
+#     # =====================================================
+#     # CREATE PDF
+#     # =====================================================
+
+#     doc = SimpleDocTemplate(
+#         pdf_path,
+#         pagesize=letter
+#     )
+
+#     styles = getSampleStyleSheet()
+
+#     elements = []
+
+#     # =====================================================
+#     # TITLE
+#     # =====================================================
+
+#     title = Paragraph(
+#         "NeuralRetail AI - Churn Intelligence Report",
+#         styles["Title"]
+#     )
+
+#     elements.append(title)
+#     elements.append(Spacer(1, 20))
+
+#     # =====================================================
+#     # KPI SUMMARY
+#     # =====================================================
+
+#     total_customers = len(filtered_df)
+
+#     avg_churn = (
+#         filtered_df["Churn_Probability"].mean()
+#     )
+
+#     high_risk = len(
+#         filtered_df[
+#             filtered_df["Churn_Probability"] > 0.7
+#         ]
+#     )
+
+#     summary_data = [
+#         ["Metric", "Value"],
+#         ["Total Customers", str(total_customers)],
+#         ["Average Churn Risk", f"{avg_churn:.2%}"],
+#         ["High Risk Customers", str(high_risk)]
+#     ]
+
+#     summary_table = Table(summary_data)
+
+#     summary_table.setStyle(TableStyle([
+#         ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+#         ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+#         ("GRID", (0, 0), (-1, -1), 1, colors.black),
+#         ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+#         ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
+#     ]))
+
+#     elements.append(summary_table)
+#     elements.append(Spacer(1, 20))
+
+#     # =====================================================
+#     # SAMPLE DATA TABLE
+#     # =====================================================
+
+#     sample_df = filtered_df.head(10)
+
+#     table_data = [sample_df.columns.tolist()]
+
+#     for row in sample_df.values.tolist():
+#         table_data.append(row)
+
+#     data_table = Table(table_data)
+
+#     data_table.setStyle(TableStyle([
+#         ("BACKGROUND", (0, 0), (-1, 0), colors.darkblue),
+#         ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+#         ("GRID", (0, 0), (-1, -1), 1, colors.black),
+#         ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+#         ("FONTSIZE", (0, 0), (-1, -1), 8),
+#     ]))
+
+#     elements.append(data_table)
+
+#     # =====================================================
+#     # BUILD PDF
+#     # =====================================================
+
+#     doc.build(elements)
+
+#     # =====================================================
+#     # DOWNLOAD BUTTON
+#     # =====================================================
+
+#     with open(pdf_path, "rb") as pdf_file:
+
+#         st.download_button(
+#             label="⬇️ Download PDF Report",
+#             data=pdf_file,
+#             file_name="neuralretail_churn_report.pdf",
+#             mime="application/pdf"
+#         )
+# # =========================================================
+# # KPI SECTION
+# # =========================================================
+
+# total_customers = filtered_df["CustomerID"].nunique()
+
+# high_risk_customers = len(
+#     filtered_df[
+#         filtered_df["Churn_Probability"] > 0.7
+#     ]
+# )
+
+# avg_churn = round(
+#     filtered_df["Churn_Probability"].mean(),
+#     2
+# )
+
+# avg_monetary = round(
+#     filtered_df["Monetary"].mean(),
+#     2
+# )
+
+# st.markdown("## 📌 Customer KPI Overview")
+
+# col1, col2, col3, col4 = st.columns(4)
+
+# with col1:
+#     st.metric(
+#         label="👥 Total Customers",
+#         value=f"{total_customers:,}",
+#         delta="Customer Base"
+#     )
+
+# with col2:
+#     st.metric(
+#         label="🚨 High Risk Customers",
+#         value=f"{high_risk_customers:,}",
+#         delta="Retention Required"
+#     )
+
+# with col3:
+#     st.metric(
+#         label="📉 Avg Churn Risk",
+#         value=f"{avg_churn:.2f}",
+#         delta="ML Prediction"
+#     )
+
+# with col4:
+#     st.metric(
+#         label="💰 Avg Customer Value",
+#         value=f"${avg_monetary:,.0f}",
+#         delta="Monetary Score"
+#     )
+
+# # =========================================================
+# # CHURN DISTRIBUTION
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("📊 Churn Probability Distribution")
+
+# fig1 = px.histogram(
+#     filtered_df,
+#     x="Churn_Probability",
+#     nbins=35,
+#     color_discrete_sequence=["#F97316"],
+#     title="Customer Churn Risk Distribution"
+# )
+
+# fig1.update_layout(
+#     bargap=0.05
+# )
+
+# fig1 = apply_dark_theme(fig1)
+
+# st.plotly_chart(
+#     fig1,
+#     use_container_width=True
+# )
+
+# # =========================================================
+# # CUSTOMER SEGMENTS
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("👥 Customer Segment Distribution")
+
+# segment_df = (
+#     filtered_df["Segment"]
+#     .value_counts()
+#     .reset_index()
+# )
+
+# segment_df.columns = [
+#     "Segment",
+#     "Customers"
+# ]
+
+# fig2 = px.bar(
+#     segment_df.sort_values("Customers"),
+#     x="Customers",
+#     y="Segment",
+#     orientation="h",
+#     color="Customers",
+#     color_continuous_scale=[
+#         "#F59E0B",
+#         "#F97316",
+#         "#EA580C"
+#     ],
+#     title="Customer Segments by Size"
+# )
+
+# fig2.update_layout(
+#     showlegend=False
+# )
+
+# fig2 = apply_dark_theme(fig2)
+
+# st.plotly_chart(
+#     fig2,
+#     use_container_width=True
+# )
+
+# # =========================================================
+# # RFM ANALYSIS
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("📈 RFM Customer Analysis")
+
+# fig3 = px.scatter(
+#     filtered_df,
+#     x="Frequency",
+#     y="Monetary",
+#     size="Recency",
+#     color="Churn_Probability",
+#     opacity=0.7,
+#     hover_data=[
+#         "CustomerID",
+#         "Segment"
+#     ],
+#     color_continuous_scale=[
+#         "#F59E0B",
+#         "#F97316",
+#         "#EA580C"
+#     ],
+#     title="Customer Value vs Purchase Frequency"
+# )
+
+# fig3.update_layout(
+#     xaxis_type="log",
+#     yaxis_type="log"
+# )
+
+# fig3 = apply_dark_theme(fig3)
+
+# st.plotly_chart(
+#     fig3,
+#     use_container_width=True
+# )
+
+# # =========================================================
+# # CUSTOMER VALUE BY SEGMENT
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("💰 Customer Value by Segment")
+
+# segment_value = (
+#     filtered_df
+#     .groupby("Segment")["Monetary"]
+#     .mean()
+#     .reset_index()
+# )
+
+# fig4 = px.bar(
+#     segment_value,
+#     x="Segment",
+#     y="Monetary",
+#     color="Monetary",
+#     color_continuous_scale=[
+#         "#F59E0B",
+#         "#F97316",
+#         "#EA580C"
+#     ],
+#     title="Average Monetary Value by Segment"
+# )
+
+# fig4.update_layout(
+#     coloraxis_showscale=False
+# )
+
+# fig4 = apply_dark_theme(fig4)
+
+# st.plotly_chart(
+#     fig4,
+#     use_container_width=True
+# )
+
+# # =========================================================
+# # CHURN RISK BY SEGMENT
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("⚠️ Churn Risk by Segment")
+
+# segment_churn = (
+#     filtered_df
+#     .groupby("Segment")["Churn_Probability"]
+#     .mean()
+#     .reset_index()
+# )
+
+# fig5 = px.bar(
+#     segment_churn,
+#     x="Segment",
+#     y="Churn_Probability",
+#     color="Churn_Probability",
+#     color_continuous_scale=[
+#         "#F59E0B",
+#         "#F97316",
+#         "#EA580C"
+#     ],
+#     title="Average Churn Probability by Segment"
+# )
+
+# fig5.update_layout(
+#     coloraxis_showscale=False
+# )
+
+# fig5 = apply_dark_theme(fig5)
+
+# st.plotly_chart(
+#     fig5,
+#     use_container_width=True
+# )
+
+# # =========================================================
+# # CHURN HEATMAP
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("🔥 Segment Intelligence Heatmap")
+
+# heatmap_df = (
+#     filtered_df
+#     .groupby("Segment")
+#     [
+#         [
+#             "Recency",
+#             "Frequency",
+#             "Monetary",
+#             "Churn_Probability"
+#         ]
+#     ]
+#     .mean()
+# )
+
+# fig_heat = px.imshow(
+#     heatmap_df,
+#     text_auto=True,
+#     aspect="auto",
+#     color_continuous_scale="Oranges"
+# )
+
+# fig_heat = apply_dark_theme(fig_heat)
+
+# st.plotly_chart(
+#     fig_heat,
+#     use_container_width=True
+# )
+
+# # =========================================================
+# # TOP CUSTOMERS
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("🏆 Top High-Value Customers")
+
+# top_customers = (
+#     filtered_df
+#     .sort_values(
+#         by="Monetary",
+#         ascending=False
+#     )
+#     .head(20)
+# )
+
+# st.dataframe(
+#     top_customers[
+#         [
+#             "CustomerID",
+#             "Segment",
+#             "Monetary",
+#             "Frequency",
+#             "Recency",
+#             "Churn_Probability"
+#         ]
+#     ],
+#     use_container_width=True,
+#     height=400
+# )
+
+# # =========================================================
+# # HIGH RISK CUSTOMERS
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("🚨 High Churn Risk Customers")
+
+# high_risk_df = filtered_df[
+#     filtered_df["Churn_Probability"] > 0.7
+# ]
+
+# st.dataframe(
+#     high_risk_df[
+#         [
+#             "CustomerID",
+#             "Segment",
+#             "Monetary",
+#             "Frequency",
+#             "Recency",
+#             "Churn_Probability"
+#         ]
+#     ],
+#     use_container_width=True,
+#     height=400
+# )
+
+# # =========================================================
+# # AI CUSTOMER INSIGHTS
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("🧠 AI Customer Insights")
+
+# top_segment = (
+#     filtered_df["Segment"]
+#     .value_counts()
+#     .idxmax()
+# )
+
+# highest_risk_segment = (
+#     segment_churn
+#     .sort_values(
+#         by="Churn_Probability",
+#         ascending=False
+#     )
+#     .iloc[0]["Segment"]
+# )
+
+# st.info(f"""
+# • Largest customer segment: {top_segment}
+
+# • Highest churn-risk segment: {highest_risk_segment}
+
+# • Average customer value is ${avg_monetary:,.0f}
+
+# • {high_risk_customers:,} customers require immediate retention targeting
+# """)
+
+# # =========================================================
+# # AI RETENTION ENGINE
+# # =========================================================
+
+# st.markdown("---")
+
+# st.subheader("🤖 AI Retention Recommendations")
+
+# if avg_churn > 0.6:
+#     st.warning(
+#         "Customer churn probability is elevated. Launch retention campaigns immediately."
+#     )
+
+# if high_risk_customers > total_customers * 0.3:
+#     st.error(
+#         "High-risk customer count exceeds healthy retention threshold."
+#     )
+
+# if avg_monetary > 500:
+#     st.success(
+#         "High customer lifetime value detected across active segments."
+#     )
+
+# st.info(
+#     "Recommendation: Prioritize loyalty rewards for high-frequency customers with increasing recency trends."
+# )
+
+# # =========================================================
+# # FOOTER
+# # =========================================================
+
+# st.markdown("---")
+
+# st.caption(
+#     "NeuralRetail AI • Customer Intelligence Module • Amdox Technologies"
+# )
+
 # =========================================================
 # NeuralRetail AI — Customer Intelligence
 # Amdox Technologies
@@ -9,17 +629,17 @@ import plotly.express as px
 import tempfile
 import io
 
-
 from auth_guard import check_auth
 from utils.theme import load_css
 from utils.loader import load_churn_data
 from utils.chart_theme import apply_dark_theme
+
 from reportlab.platypus import (
     SimpleDocTemplate,
     Table,
     TableStyle,
     Paragraph,
-    Spacer 
+    Spacer
 )
 
 from reportlab.lib import colors
@@ -28,7 +648,6 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 load_css()
 check_auth()
-
 
 # =========================================================
 # PAGE HEADER
@@ -73,10 +692,17 @@ filtered_df = churn_df[
 ]
 
 # =========================================================
-# EXCEL EXPORT
+# COMMON CHART LAYOUT
 # =========================================================
 
+COMMON_LAYOUT = dict(
+    height=360,
+    margin=dict(l=20, r=20, t=50, b=20)
+)
 
+# =========================================================
+# EXCEL EXPORT
+# =========================================================
 
 excel_buffer = io.BytesIO()
 
@@ -109,10 +735,6 @@ if st.button("📄 Generate PDF Report"):
 
         pdf_path = tmpfile.name
 
-    # =====================================================
-    # CREATE PDF
-    # =====================================================
-
     doc = SimpleDocTemplate(
         pdf_path,
         pagesize=letter
@@ -122,10 +744,6 @@ if st.button("📄 Generate PDF Report"):
 
     elements = []
 
-    # =====================================================
-    # TITLE
-    # =====================================================
-
     title = Paragraph(
         "NeuralRetail AI - Churn Intelligence Report",
         styles["Title"]
@@ -133,10 +751,6 @@ if st.button("📄 Generate PDF Report"):
 
     elements.append(title)
     elements.append(Spacer(1, 20))
-
-    # =====================================================
-    # KPI SUMMARY
-    # =====================================================
 
     total_customers = len(filtered_df)
 
@@ -170,10 +784,6 @@ if st.button("📄 Generate PDF Report"):
     elements.append(summary_table)
     elements.append(Spacer(1, 20))
 
-    # =====================================================
-    # SAMPLE DATA TABLE
-    # =====================================================
-
     sample_df = filtered_df.head(10)
 
     table_data = [sample_df.columns.tolist()]
@@ -193,15 +803,7 @@ if st.button("📄 Generate PDF Report"):
 
     elements.append(data_table)
 
-    # =====================================================
-    # BUILD PDF
-    # =====================================================
-
     doc.build(elements)
-
-    # =====================================================
-    # DOWNLOAD BUTTON
-    # =====================================================
 
     with open(pdf_path, "rb") as pdf_file:
 
@@ -211,6 +813,7 @@ if st.button("📄 Generate PDF Report"):
             file_name="neuralretail_churn_report.pdf",
             mime="application/pdf"
         )
+
 # =========================================================
 # KPI SECTION
 # =========================================================
@@ -266,228 +869,278 @@ with col4:
     )
 
 # =========================================================
-# CHURN DISTRIBUTION
+# CHART ROW 1
 # =========================================================
 
 st.markdown("---")
 
-st.subheader("📊 Churn Probability Distribution")
+col_left, col_right = st.columns(2)
 
-fig1 = px.histogram(
-    filtered_df,
-    x="Churn_Probability",
-    nbins=35,
-    color_discrete_sequence=["#F97316"],
-    title="Customer Churn Risk Distribution"
-)
+# =========================================================
+# CHURN DISTRIBUTION
+# =========================================================
 
-fig1.update_layout(
-    bargap=0.05
-)
+with col_left:
 
-fig1 = apply_dark_theme(fig1)
+    fig1 = px.histogram(
+        filtered_df,
+        x="Churn_Probability",
+        nbins=35,
+        color_discrete_sequence=["#F97316"],
+        title="📊 Churn Probability Distribution"
+    )
 
-st.plotly_chart(
-    fig1,
-    use_container_width=True
-)
+    fig1.update_layout(
+        bargap=0.05,
+        showlegend=False,
+        **COMMON_LAYOUT
+    )
+
+    fig1 = apply_dark_theme(fig1)
+
+    st.plotly_chart(
+        fig1,
+        use_container_width=True,
+        config={"displayModeBar": False}
+    )
 
 # =========================================================
 # CUSTOMER SEGMENTS
 # =========================================================
 
+with col_right:
+
+    segment_df = (
+        filtered_df["Segment"]
+        .value_counts()
+        .reset_index()
+    )
+
+    segment_df.columns = [
+        "Segment",
+        "Customers"
+    ]
+
+    segment_df = segment_df.sort_values(
+        by="Customers",
+        ascending=True
+    )
+
+    fig2 = px.bar(
+        segment_df,
+        x="Customers",
+        y="Segment",
+        orientation="h",
+        color="Customers",
+        text_auto=True,
+        color_continuous_scale=[
+            "#F59E0B",
+            "#F97316",
+            "#EA580C"
+        ],
+        title="👥 Customer Segment Distribution"
+    )
+
+    fig2.update_layout(
+        showlegend=False,
+        coloraxis_showscale=False,
+        **COMMON_LAYOUT
+    )
+
+    fig2 = apply_dark_theme(fig2)
+
+    st.plotly_chart(
+        fig2,
+        use_container_width=True,
+        config={"displayModeBar": False}
+    )
+
+# =========================================================
+# CHART ROW 2
+# =========================================================
+
 st.markdown("---")
 
-st.subheader("👥 Customer Segment Distribution")
-
-segment_df = (
-    filtered_df["Segment"]
-    .value_counts()
-    .reset_index()
-)
-
-segment_df.columns = [
-    "Segment",
-    "Customers"
-]
-
-fig2 = px.bar(
-    segment_df.sort_values("Customers"),
-    x="Customers",
-    y="Segment",
-    orientation="h",
-    color="Customers",
-    color_continuous_scale=[
-        "#F59E0B",
-        "#F97316",
-        "#EA580C"
-    ],
-    title="Customer Segments by Size"
-)
-
-fig2.update_layout(
-    showlegend=False
-)
-
-fig2 = apply_dark_theme(fig2)
-
-st.plotly_chart(
-    fig2,
-    use_container_width=True
-)
+col_left, col_right = st.columns(2)
 
 # =========================================================
 # RFM ANALYSIS
 # =========================================================
 
-st.markdown("---")
+with col_left:
 
-st.subheader("📈 RFM Customer Analysis")
+    fig3 = px.scatter(
+        filtered_df,
+        x="Frequency",
+        y="Monetary",
+        size="Recency",
+        color="Churn_Probability",
+        opacity=0.7,
+        hover_data=[
+            "CustomerID",
+            "Segment"
+        ],
+        color_continuous_scale=[
+            "#F59E0B",
+            "#F97316",
+            "#EA580C"
+        ],
+        title="📈 RFM Customer Analysis"
+    )
 
-fig3 = px.scatter(
-    filtered_df,
-    x="Frequency",
-    y="Monetary",
-    size="Recency",
-    color="Churn_Probability",
-    opacity=0.7,
-    hover_data=[
-        "CustomerID",
-        "Segment"
-    ],
-    color_continuous_scale=[
-        "#F59E0B",
-        "#F97316",
-        "#EA580C"
-    ],
-    title="Customer Value vs Purchase Frequency"
-)
+    fig3.update_layout(
+        xaxis_type="log",
+        yaxis_type="log",
+        coloraxis_showscale=False,
+        **COMMON_LAYOUT
+    )
 
-fig3.update_layout(
-    xaxis_type="log",
-    yaxis_type="log"
-)
+    fig3 = apply_dark_theme(fig3)
 
-fig3 = apply_dark_theme(fig3)
-
-st.plotly_chart(
-    fig3,
-    use_container_width=True
-)
+    st.plotly_chart(
+        fig3,
+        use_container_width=True,
+        config={"displayModeBar": False}
+    )
 
 # =========================================================
 # CUSTOMER VALUE BY SEGMENT
 # =========================================================
 
+with col_right:
+
+    segment_value = (
+        filtered_df
+        .groupby("Segment")["Monetary"]
+        .mean()
+        .reset_index()
+        .sort_values(
+            by="Monetary",
+            ascending=True
+        )
+    )
+
+    fig4 = px.bar(
+        segment_value,
+        x="Segment",
+        y="Monetary",
+        color="Monetary",
+        text_auto=".2s",
+        color_continuous_scale=[
+            "#F59E0B",
+            "#F97316",
+            "#EA580C"
+        ],
+        title="💰 Customer Value by Segment"
+    )
+
+    fig4.update_layout(
+        coloraxis_showscale=False,
+        showlegend=False,
+        **COMMON_LAYOUT
+    )
+
+    fig4 = apply_dark_theme(fig4)
+
+    st.plotly_chart(
+        fig4,
+        use_container_width=True,
+        config={"displayModeBar": False}
+    )
+
+# =========================================================
+# CHART ROW 3
+# =========================================================
+
 st.markdown("---")
 
-st.subheader("💰 Customer Value by Segment")
-
-segment_value = (
-    filtered_df
-    .groupby("Segment")["Monetary"]
-    .mean()
-    .reset_index()
-)
-
-fig4 = px.bar(
-    segment_value,
-    x="Segment",
-    y="Monetary",
-    color="Monetary",
-    color_continuous_scale=[
-        "#F59E0B",
-        "#F97316",
-        "#EA580C"
-    ],
-    title="Average Monetary Value by Segment"
-)
-
-fig4.update_layout(
-    coloraxis_showscale=False
-)
-
-fig4 = apply_dark_theme(fig4)
-
-st.plotly_chart(
-    fig4,
-    use_container_width=True
-)
+col_left, col_right = st.columns(2)
 
 # =========================================================
 # CHURN RISK BY SEGMENT
 # =========================================================
 
-st.markdown("---")
+with col_left:
 
-st.subheader("⚠️ Churn Risk by Segment")
+    segment_churn = (
+        filtered_df
+        .groupby("Segment")["Churn_Probability"]
+        .mean()
+        .reset_index()
+        .sort_values(
+            by="Churn_Probability",
+            ascending=True
+        )
+    )
 
-segment_churn = (
-    filtered_df
-    .groupby("Segment")["Churn_Probability"]
-    .mean()
-    .reset_index()
-)
+    fig5 = px.bar(
+        segment_churn,
+        x="Segment",
+        y="Churn_Probability",
+        color="Churn_Probability",
+        text_auto=".2f",
+        color_continuous_scale=[
+            "#F59E0B",
+            "#F97316",
+            "#EA580C"
+        ],
+        title="⚠️ Churn Risk by Segment"
+    )
 
-fig5 = px.bar(
-    segment_churn,
-    x="Segment",
-    y="Churn_Probability",
-    color="Churn_Probability",
-    color_continuous_scale=[
-        "#F59E0B",
-        "#F97316",
-        "#EA580C"
-    ],
-    title="Average Churn Probability by Segment"
-)
+    fig5.update_layout(
+        coloraxis_showscale=False,
+        showlegend=False,
+        **COMMON_LAYOUT
+    )
 
-fig5.update_layout(
-    coloraxis_showscale=False
-)
+    fig5 = apply_dark_theme(fig5)
 
-fig5 = apply_dark_theme(fig5)
-
-st.plotly_chart(
-    fig5,
-    use_container_width=True
-)
+    st.plotly_chart(
+        fig5,
+        use_container_width=True,
+        config={"displayModeBar": False}
+    )
 
 # =========================================================
-# CHURN HEATMAP
+# HEATMAP
 # =========================================================
 
-st.markdown("---")
+with col_right:
 
-st.subheader("🔥 Segment Intelligence Heatmap")
-
-heatmap_df = (
-    filtered_df
-    .groupby("Segment")
-    [
+    heatmap_df = (
+        filtered_df
+        .groupby("Segment")
         [
-            "Recency",
-            "Frequency",
-            "Monetary",
-            "Churn_Probability"
+            [
+                "Recency",
+                "Frequency",
+                "Monetary",
+                "Churn_Probability"
+            ]
         ]
-    ]
-    .mean()
-)
+        .mean()
+    )
 
-fig_heat = px.imshow(
-    heatmap_df,
-    text_auto=True,
-    aspect="auto",
-    color_continuous_scale="Oranges"
-)
+    fig_heat = px.imshow(
+        heatmap_df,
+        text_auto=True,
+        aspect="auto",
+        color_continuous_scale="Oranges"
+    )
 
-fig_heat = apply_dark_theme(fig_heat)
+    fig_heat.update_layout(
+        title="🔥 Segment Intelligence Heatmap",
+        height=360,
+        margin=dict(l=20, r=20, t=50, b=20)
+    )
 
-st.plotly_chart(
-    fig_heat,
-    use_container_width=True
-)
+    fig_heat = apply_dark_theme(fig_heat)
+
+    st.plotly_chart(
+        fig_heat,
+        use_container_width=True,
+        config={"displayModeBar": False}
+    )
 
 # =========================================================
 # TOP CUSTOMERS
@@ -518,7 +1171,7 @@ st.dataframe(
         ]
     ],
     use_container_width=True,
-    height=400
+    height=350
 )
 
 # =========================================================
@@ -545,7 +1198,7 @@ st.dataframe(
         ]
     ],
     use_container_width=True,
-    height=400
+    height=350
 )
 
 # =========================================================
@@ -617,4 +1270,3 @@ st.markdown("---")
 st.caption(
     "NeuralRetail AI • Customer Intelligence Module • Amdox Technologies"
 )
-

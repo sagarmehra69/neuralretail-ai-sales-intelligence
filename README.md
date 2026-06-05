@@ -1,405 +1,392 @@
-# 🧠 NeuralRetail AI
+# 🧠 NeuralRetail AI Sales Intelligence Platform
 
-Enterprise AI-powered retail intelligence platform built using Machine Learning, Forecasting Models, Customer Analytics, Inventory Intelligence, and Interactive Dashboards.
-
-NeuralRetail AI transforms raw retail transaction data into actionable business intelligence using AI-driven forecasting, churn prediction, inventory optimization, and MLOps monitoring.
+An enterprise-style AI-powered retail analytics platform built using **Streamlit, FastAPI, Machine Learning, and Cloud Deployment** for intelligent business forecasting, customer churn prediction, monitoring, and decision support.
 
 ---
 
-## 🌐 Live Dashboard
- [![Live App](https://img.shields.io/badge/Live-Dashboard-success?style=for-the-badge&logo=streamlit)](https://neuralretail-ai-sales-intelligence.streamlit.app/inventory_intelligence)
+# 🚀 Live Demo
 
+## 🌐 Streamlit Application
 
-# 🚀 Key Features
+https://neuralretail-ai-sales-intelligence.streamlit.app
 
-## 📈 Demand Forecasting
-- AI-powered sales forecasting using:
-  - Prophet
-  - XGBoost
-- Time-series feature engineering
-- Forecast performance comparison
-- Actual vs Predicted visualization
-- Forecast KPI monitoring
+## ⚡ FastAPI Backend
+
+https://neuralretail-ai-sales-intelligence.onrender.com/docs
 
 ---
 
-## 👥 Customer Intelligence
-- Customer churn prediction
-- Customer segmentation analytics
-- High-risk customer detection
-- Churn probability analysis
-- Retention intelligence dashboard
+# 📌 Project Overview
 
----
+NeuralRetail AI is a production-style retail intelligence system designed to help businesses analyze customer behavior, forecast sales trends, identify churn risks, and monitor AI model performance in real time.
 
-## 📦 Inventory Intelligence
-- Inventory risk analysis
-- Reorder point monitoring
-- EOQ (Economic Order Quantity) analysis
-- Stock optimization insights
-- Inventory alert system
+This project combines:
 
----
+* Business Intelligence
+* Machine Learning
+* Cloud APIs
+* Authentication Systems
+* MLOps Concepts
+* Enterprise Dashboard Design
 
-## ⚙️ MLOps Monitoring
-- Model performance tracking
-- Forecast model comparison
-- Drift monitoring simulation
-- AI pipeline health monitoring
-- Champion vs challenger model evaluation
+The system simulates how modern retail analytics platforms operate in real enterprise environments.
 
 ---
 
 # 🏗️ System Architecture
 
-<img width="1376" height="768" alt="NuralRetail" src="https://github.com/user-attachments/assets/222fa859-391d-415b-8eb0-5113de87b9dc" />
-
-
----
-
-# 🏗️ NeuralRetail AI — System Architecture
-
 ```text
-                                      ┌──────────────────────────┐
-                                      │   Retail Transaction     │
-                                      │        Dataset           │
-                                      └────────────┬─────────────┘
-                                                   │
-                                                   ▼
-                         ┌─────────────────────────────────────────┐
-                         │      Data Cleaning & Preprocessing      │
-                         │-----------------------------------------│
-                         │ • Missing Value Handling                │
-                         │ • Outlier Detection                     │
-                         │ • Datetime Processing                   │
-                         │ • Feature Standardization               │
-                         └────────────┬────────────────────────────┘
-                                      │
-                                      ▼
-                     ┌──────────────────────────────────────────────┐
-                     │           Feature Engineering                │
-                     │----------------------------------------------│
-                     │ • Lag Features                               │
-                     │ • Rolling Mean / Std                         │
-                     │ • RFM Analysis                               │
-                     │ • EOQ Calculations                           │
-                     │ • Inventory Risk Features                    │
-                     │ • Time-Series Aggregation                    │
-                     └────────────┬─────────────────────────────────┘
-                                  │
-         ┌────────────────────────┼────────────────────────┐
-         │                        │                        │
-         ▼                        ▼                        ▼
-
-┌─────────────────┐    ┌────────────────────┐    ┌────────────────────┐
-│ Demand Forecast │    │ Customer Analytics │    │ Inventory Analytics│
-│-----------------│    │--------------------│    │--------------------│
-│ Prophet         │    │ Churn Prediction   │    │ EOQ Analysis       │
-│ XGBoost         │    │ RFM Segmentation   │    │ Reorder Monitoring │
-│ Forecast KPIs   │    │ Risk Scoring       │    │ Risk Scoring       │
-└────────┬────────┘    └─────────┬──────────┘    └─────────┬──────────┘
-         │                       │                         │
-         └───────────────────────┼─────────────────────────┘
-                                 │
-                                 ▼
-
-               ┌──────────────────────────────────┐
-               │      Model Evaluation Layer      │
-               │----------------------------------│
-               │ • MAPE                           │
-               │ • RMSE                           │
-               │ • MAE                            │
-               │ • F1 Score                       │
-               │ • Drift Monitoring               │
-               │ • Champion Model Selection       │
-               └──────────────┬───────────────────┘
-                              │
-                              ▼
-
-               ┌──────────────────────────────────┐
-               │       Data Export Pipeline       │
-               │----------------------------------│
-               │ • forecast_results.csv           │
-               │ • churn_predictions.csv          │
-               │ • inventory_risk.csv             │
-               │ • model_metrics.csv              │
-               └──────────────┬───────────────────┘
-                              │
-                              ▼
-
-               ┌──────────────────────────────────┐
-               │       Streamlit Dashboard        │
-               │----------------------------------│
-               │ • Executive Overview             │
-               │ • Forecasting Intelligence       │
-               │ • Customer Intelligence          │
-               │ • Inventory Intelligence         │
-               │ • MLOps Monitoring               │
-               └──────────────┬───────────────────┘
-                              │
-                              ▼
-
-               ┌──────────────────────────────────┐
-               │        Business Intelligence      │
-               │----------------------------------│
-               │ • Sales Insights                 │
-               │ • Churn Detection                │
-               │ • Inventory Optimization         │
-               │ • AI Monitoring                  │
-               │ • Operational Analytics          │
-               └──────────────────────────────────┘
-
+User
+   ↓
+Streamlit Frontend Dashboard
+   ↓
+Authentication & RBAC Layer
+   ↓
+FastAPI Backend APIs
+   ↓
+Machine Learning Models
+   ├── XGBoost Churn Prediction
+   ├── Prophet Forecasting
+   └── Analytics Engine
+   ↓
+Monitoring & Reporting Layer
+   ↓
+Cloud Deployment (Render + Streamlit Cloud)
 ```
-```text
-═══════════════════════════════════════════════════════════════════════
-
-                        ⚙️ MLOps Monitoring Layer
-
-═══════════════════════════════════════════════════════════════════════
-
-┌──────────────────────┐
-│ MLflow Tracking      │
-│----------------------│
-│ • Experiment Logging │
-│ • Model Metrics      │
-│ • Artifact Tracking  │
-└──────────┬───────────┘
-           │
-           ▼
-
-┌──────────────────────┐
-│ Drift Monitoring     │
-│----------------------│
-│ • Data Drift         │
-│ • KPI Monitoring     │
-│ • Performance Drift  │
-└──────────┬───────────┘
-           │
-           ▼
-
-┌──────────────────────┐
-│ Deployment Ready     │
-│----------------------│
-│ • Streamlit UI       │
-│ • Multi-page App     │
-│ • Modular Loaders    │
-│ • Real-time KPIs     │
-└──────────────────────┘
-```
----
-
-# 📊 Dashboard Modules
-
-## 🧠 Executive Overview
-Central command center showing:
-- Global KPIs
-- Sales trends
-- Churn overview
-- Inventory risk overview
-- AI system status
 
 ---
 
-## 📈 Demand Forecasting Dashboard
-Includes:
-- Actual vs Predicted Sales
-- Forecast KPIs
-- Trend visualization
-- Forecast monitoring
+# ✨ Key Features
+
+## 📊 Business Intelligence Dashboard
+
+* Executive KPI Monitoring
+* Revenue & Sales Analysis
+* Customer Segmentation
+* Risk-Based Filtering
+* Interactive Visualizations
 
 ---
 
-## 👥 Customer Intelligence Dashboard
-Includes:
-- Churn probability distribution
-- Customer segmentation
-- High-risk customer detection
-- Customer analytics
+## 🤖 AI & Machine Learning
+
+### 🔥 Churn Prediction
+
+* Real-time churn prediction using XGBoost
+* Live API-based inference
+* Probability-based risk scoring
+* Feature engineering during inference
+
+### 📈 Sales Forecasting
+
+* Prophet-based future sales forecasting
+* Trend analysis
+* Seasonal pattern prediction
 
 ---
 
-## 📦 Inventory Intelligence Dashboard
-Includes:
-- Inventory risk distribution
-- EOQ analysis
-- Stock vs reorder point analytics
-- Inventory alerts
+## ⚡ FastAPI Backend
+
+* Production-style ML API serving
+* RESTful prediction endpoints
+* Swagger API documentation
+* Modular backend architecture
 
 ---
 
-## ⚙️ Model Monitoring Dashboard
-Includes:
-- Model comparison metrics
-- MAPE monitoring
-- Drift monitoring
-- AI lifecycle tracking
-- System health monitoring
+## 🔐 Authentication & RBAC
+
+* Login system
+* Session management
+* Protected routes
+* Role-Based Access Control (RBAC)
+* Admin & Viewer roles
 
 ---
 
-# 📉 Model Performance
+## 📄 Export & Reporting
 
-| Model | Performance |
-|---|---|
-| XGBoost Forecasting | MAPE: 21.45% |
-| Prophet Forecasting | MAPE: 30.75% |
-| Churn Prediction | F1 Score: 0.999 |
-| Inventory Intelligence | Risk Scoring System |
+* Excel report generation
+* Professional PDF reports
+* Executive analytics summaries
 
 ---
 
-# ⚙️ Tech Stack
+## 📡 Monitoring Dashboard
 
-## Programming & Analytics
-- Python
-- Pandas
-- NumPy
+* API health tracking
+* Model monitoring
+* Simulated AI drift monitoring
+* Prediction statistics
+* System health metrics
+
+---
+
+# 🧠 Machine Learning Models
+
+| Model                   | Purpose                          |
+| ----------------------- | -------------------------------- |
+| XGBoost                 | Customer Churn Prediction        |
+| Prophet                 | Sales Forecasting                |
+| Pandas Analytics Engine | Business Insights & KPI Analysis |
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+* Streamlit
+* Plotly
+* HTML/CSS
+
+## Backend
+
+* FastAPI
+* Uvicorn
 
 ## Machine Learning
-- Scikit-learn
-- XGBoost
-- Prophet
 
-## Visualization
-- Plotly
-- Matplotlib
-- Streamlit
+* XGBoost
+* Prophet
+* Scikit-learn
+* Pandas
+* NumPy
 
-## MLOps & Optimization
-- MLflow
-- Optuna
+## Authentication
 
-## Development Environment
-- Jupyter Notebook
-- VS Code
+* streamlit-authenticator
+
+## Reporting
+
+* ReportLab
+* OpenPyXL
+
+## Deployment
+
+* Render
+* Streamlit Cloud
+* GitHub
 
 ---
 
 # 📂 Project Structure
 
 ```text
-NeuralRetail/
+NeuralRetail-AI/
+│
+├── api/
+│   ├── main.py
+│   ├── model_loader.py
+│   ├── schemas.py
+│   └── requirements.txt
 │
 ├── app/
-│   └── dashboard/
-│       ├── app.py
-│       ├── pages/
-│       ├── utils/
-│       ├── data/
-│       └── assets/
+│   ├── pages/
+│   ├── login.py
+│   ├── auth_guard.py
+│   └── roles.py
+│
+├── output/
+│   ├── figures/
+│   └── models/
 │
 ├── notebooks/
-│   ├── 01_EDA.ipynb
-│   ├── 02_Demand_Forecasting.ipynb
-│   ├── 03_Customer_Intelligence.ipynb
-│   ├── 04_Inventory_Intelligence.ipynb
-│   └── 05_MLOps_Monitoring.ipynb
 │
-├── data/
-├── models/
-├── reports/
-├── src/
+├── render.yaml
+├── auth_config.yaml
+├── app.py
 └── README.md
-
 ```
 
-# 🧪 Machine Learning Pipeline
-
-Forecasting Pipeline
-Time-series preprocessing
-Lag feature generation
-Rolling statistics
-Forecast model training
-Model evaluation
-Customer Intelligence Pipeline
-RFM feature engineering
-Churn classification
-Customer segmentation
-Risk scoring
-Inventory Intelligence Pipeline
-EOQ calculation  
-Reorder point analysis
-Inventory risk scoring
-Inventory optimization
-
 ---
 
-# 📡 MLOps Capabilities
-Model monitoring
-Performance tracking
-Drift monitoring
-Pipeline health monitoring
-Metrics visualization
-Deployment-ready architecture
----
-# 🎯 Business Impact
+# ⚙️ Installation Guide
 
-NeuralRetail AI helps retailers:
+## 1️⃣ Clone Repository
 
-Reduce inventory waste
-Improve sales forecasting
-Detect customer churn early
-Optimize inventory operations
-Improve operational visibility
-Enable AI-driven retail decisions
----
-
-# 🚀 Running the Dashboard
-
-Clone Repository
-
+```bash
 git clone https://github.com/sagarmehra69/neuralretail-ai-sales-intelligence.git
+cd neuralretail-ai-sales-intelligence
+```
 
-Install Dependencies
+---
 
+## 2️⃣ Create Virtual Environment
+
+```bash
+python -m venv .venv
+```
+
+Activate environment:
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+### Linux/Mac
+
+```bash
+source .venv/bin/activate
+```
+
+---
+
+## 3️⃣ Install Dependencies
+
+```bash
 pip install -r requirements.txt
-Run Streamlit Dashboard
-cd app/dashboard
+```
 
+---
+
+# ▶️ Running the Application
+
+## 🚀 Run FastAPI Backend
+
+```bash
+uvicorn api.main:app --reload
+```
+
+Backend URL:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## 🌐 Run Streamlit Frontend
+
+```bash
 streamlit run app.py
----
-# 🔮 Future Improvements
-
-Real-time streaming pipelines
-Kafka integration
-LSTM forecasting models
-Cloud deployment
-Dockerization
-CI/CD pipelines
-Automated retraining
-Real-time drift detection
-API integration
-Role-based dashboard access
+```
 
 ---
 
-# 📌 Project Status
+# 🔌 API Endpoints
 
-Forecasting Intelligence ✅ Completed
-Customer Intelligence ✅ Completed
-Inventory Intelligence ✅ Completed
-Dashboard Integration ✅ Completed
-MLOps Monitoring ✅ Completed
-Enterprise Dashboard UI ✅ Completed
+## Churn Prediction Endpoint
+
+```http
+POST /predict/churn
+```
+
+### Example Request
+
+```json
+{
+  "Recency": 20,
+  "Frequency": 5,
+  "Monetary": 400
+}
+```
+
+### Example Response
+
+```json
+{
+  "churn_prediction": 0,
+  "churn_probability": 0.2469
+}
+```
+
+---
+
+# 🔐 Demo Credentials
+
+## 👑 Admin
+
+```text
+Username: admin
+Password: admin123
+```
+
+## 👤 Viewer
+
+```text
+Username: viewer
+Password: viewer123
+```
+
+---
+
+# 📈 MLOps & Monitoring Concepts
+
+This project includes simulated enterprise MLOps features:
+
+* AI monitoring dashboard
+* API health tracking
+* Drift awareness simulation
+* Prediction statistics
+* Cloud deployment architecture
+
+---
+
+# 🎯 Business Use Cases
+
+* Customer retention analytics
+* Retail sales forecasting
+* Churn risk management
+* Executive reporting
+* AI-powered business intelligence
+
+---
+
+# 📸 Project Highlights
+
+✅ Production-style ML architecture
+✅ Cloud deployment
+✅ FastAPI integration
+✅ Real-time inference
+✅ Authentication & RBAC
+✅ Monitoring dashboard
+✅ Export system
+✅ Enterprise UI/UX
+
+---
+
+# 🚧 Future Improvements
+
+* Docker containerization
+* CI/CD pipeline
+* Real drift detection using Evidently AI
+* Database integration
+* Automated retraining pipelines
+* Email alert system
+* Multi-tenant support
 
 ---
 
 # 👨‍💻 Author
-Sagar Mehra
+
+## Sagar Mehra
+
+BCA Student | AI & Machine Learning Enthusiast
+
+### Skills
+
+* Machine Learning
+* Python
+* Streamlit
+* FastAPI
+* Data Analytics
+* Power BI
+* SQL
+* Dashboard Engineering
 
 ---
-AI & Data Science Enthusiast
 
-Focused on:
+# 📜 License
 
-Machine Learning
-Forecasting Systems
-MLOps
-Enterprise AI Platforms
-
-# ⭐ If You Like This Project
-
-Give this repository a ⭐ on GitHub and support the project.
+This project is developed for educational and portfolio purposes.
 
 ---
 
+# ⭐ Final Note
+
+NeuralRetail AI is designed to simulate a modern enterprise retail intelligence ecosystem by combining machine learning, cloud deployment, monitoring, authentication, and real-time analytics into a single integrated platform.
+
+This project demonstrates not only machine learning capability, but also practical AI system architecture and deployment engineering.

@@ -15,9 +15,6 @@ from utils.chart_theme import apply_dark_theme
 load_css()
 check_auth()
 
-if not st.session_state.get("is_admin", False):
-    st.error("⛔ Access Denied: Admins Only")
-    st.stop()
 
 # =========================================================
 # PAGE CONFIG

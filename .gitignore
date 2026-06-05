@@ -27,9 +27,7 @@ data/raw/
 data/processed/
 data/exports/
 
-outputs/
-reports/figures/
-reports/models/
+outputs/figures
 
 *.log
 logs/
@@ -78,8 +76,7 @@ app/dashboard/utils/theme.py
 data/
 *.csv
 
-# Models
-*.pkl
+
 
 # MLflow
 mlruns/
@@ -95,8 +92,7 @@ __pycache__/
 data/
 *.csv
 
-# Models
-*.pkl
+
 
 # MLflow
 mlruns/

@@ -16,7 +16,6 @@ mlruns/
 mlartifacts/
 mlflow.db
 
-*.pkl
 *.joblib
 *.h5
 *.pt
@@ -64,42 +63,16 @@ __pycache__/
 # Notebooks
 .ipynb_checkpoints/
 
-# Models & artifacts
-*.pkl
 *.joblib
 *.h5
 *.parquet
 
 app/dashboard/utils/theme.py
 
-# Data
-data/
-*.csv
-
-
-
-# MLflow
-mlruns/
-
-# Cache
-__pycache__/
-*.pyc
-
-# Virtual Env
-.venv/
-
 # Large data
 data/
 *.csv
 
-
-
 # MLflow
 mlruns/
 
-# Python
-__pycache__/
-*.pyc
-
-# Virtual env
-.venv/

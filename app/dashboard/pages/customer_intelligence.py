@@ -6,20 +6,29 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import tempfile
+import io
+
 
 from auth_guard import check_auth
 from utils.theme import load_css
 from utils.loader import load_churn_data
 from utils.chart_theme import apply_dark_theme
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Table,
+    TableStyle,
+    Paragraph,
+    Spacer 
+)
 
-check_auth()
-
-
-# =========================================================
-# LOAD STYLES
-# =========================================================
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
 
 load_css()
+check_auth()
+
 
 # =========================================================
 # PAGE HEADER
@@ -63,6 +72,145 @@ filtered_df = churn_df[
     (churn_df["Churn_Probability"] <= risk_range[1])
 ]
 
+# =========================================================
+# EXCEL EXPORT
+# =========================================================
+
+
+
+excel_buffer = io.BytesIO()
+
+with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
+    filtered_df.to_excel(
+        writer,
+        index=False,
+        sheet_name="Churn_Report"
+    )
+
+excel_data = excel_buffer.getvalue()
+
+st.download_button(
+    label="📥 Download Churn Report (Excel)",
+    data=excel_data,
+    file_name="churn_report.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
+
+# =========================================================
+# PDF EXPORT
+# =========================================================
+
+if st.button("📄 Generate PDF Report"):
+
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=".pdf"
+    ) as tmpfile:
+
+        pdf_path = tmpfile.name
+
+    # =====================================================
+    # CREATE PDF
+    # =====================================================
+
+    doc = SimpleDocTemplate(
+        pdf_path,
+        pagesize=letter
+    )
+
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    # =====================================================
+    # TITLE
+    # =====================================================
+
+    title = Paragraph(
+        "NeuralRetail AI - Churn Intelligence Report",
+        styles["Title"]
+    )
+
+    elements.append(title)
+    elements.append(Spacer(1, 20))
+
+    # =====================================================
+    # KPI SUMMARY
+    # =====================================================
+
+    total_customers = len(filtered_df)
+
+    avg_churn = (
+        filtered_df["Churn_Probability"].mean()
+    )
+
+    high_risk = len(
+        filtered_df[
+            filtered_df["Churn_Probability"] > 0.7
+        ]
+    )
+
+    summary_data = [
+        ["Metric", "Value"],
+        ["Total Customers", str(total_customers)],
+        ["Average Churn Risk", f"{avg_churn:.2%}"],
+        ["High Risk Customers", str(high_risk)]
+    ]
+
+    summary_table = Table(summary_data)
+
+    summary_table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+        ("GRID", (0, 0), (-1, -1), 1, colors.black),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
+    ]))
+
+    elements.append(summary_table)
+    elements.append(Spacer(1, 20))
+
+    # =====================================================
+    # SAMPLE DATA TABLE
+    # =====================================================
+
+    sample_df = filtered_df.head(10)
+
+    table_data = [sample_df.columns.tolist()]
+
+    for row in sample_df.values.tolist():
+        table_data.append(row)
+
+    data_table = Table(table_data)
+
+    data_table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.darkblue),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+        ("GRID", (0, 0), (-1, -1), 1, colors.black),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTSIZE", (0, 0), (-1, -1), 8),
+    ]))
+
+    elements.append(data_table)
+
+    # =====================================================
+    # BUILD PDF
+    # =====================================================
+
+    doc.build(elements)
+
+    # =====================================================
+    # DOWNLOAD BUTTON
+    # =====================================================
+
+    with open(pdf_path, "rb") as pdf_file:
+
+        st.download_button(
+            label="⬇️ Download PDF Report",
+            data=pdf_file,
+            file_name="neuralretail_churn_report.pdf",
+            mime="application/pdf"
+        )
 # =========================================================
 # KPI SECTION
 # =========================================================

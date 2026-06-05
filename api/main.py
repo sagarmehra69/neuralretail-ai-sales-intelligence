@@ -1,77 +1,65 @@
-# =========================================================
-# FASTAPI IMPORTS
-# =========================================================
-
 from fastapi import FastAPI
-from pydantic import BaseModel
+import pandas as pd
 
-import joblib
-import numpy as np
-
-# =========================================================
-# CREATE APP
-# =========================================================
+from api.schemas import ChurnRequest, ChurnResponse
+from api.model_loader import churn_model
 
 app = FastAPI(
-    title="NeuralRetail AI API",
-    version="1.0"
+    title="NeuralRetail API",
+    description="AI Sales Intelligence Backend API",
+    version="1.0",
 )
 
-# =========================================================
-# LOAD MODEL
-# =========================================================
-
-model = joblib.load(
-    r"D:\NuralRetail\output\models\churn_model.pkl"
-)
 
 # =========================================================
-# INPUT SCHEMA
+# HEALTH CHECK
 # =========================================================
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "message": "NeuralRetail API is running"}
 
-class CustomerData(BaseModel):
-
-    Recency: float
-    Frequency: float
-    Monetary: float
-    AvgMonetaryPerPurchase: float
 
 # =========================================================
-# ROOT ROUTE
+# CHURN PREDICTION ENDPOINT
 # =========================================================
+@app.post("/predict/churn", response_model=ChurnResponse)
+def predict_churn(data: ChurnRequest):
 
-@app.get("/")
+    # =====================================================
+    # FEATURE ENGINEERING
+    # =====================================================
 
-def home():
+    avg_monetary = data.Monetary / max(data.Frequency, 1)
+
+    customer_value_score = (
+        (data.Frequency * data.Monetary)
+        / max(data.Recency, 1)
+    )
+
+    # =====================================================
+    # INPUT DATAFRAME
+    # =====================================================
+
+    input_df = pd.DataFrame([{
+        "Recency": data.Recency,
+        "Frequency": data.Frequency,
+        "Monetary": data.Monetary,
+        "AvgMonetaryPerPurchase": avg_monetary,
+        "CustomerValueScore": customer_value_score
+    }])
+
+    # DEBUG
+    print(input_df.columns)
+
+    # =====================================================
+    # PREDICTION
+    # =====================================================
+
+    prediction = churn_model.predict(input_df)[0]
+
+    probability = churn_model.predict_proba(input_df)[0][1]
 
     return {
-        "message": "NeuralRetail AI API Running"
-    }
-
-# =========================================================
-# CHURN PREDICTION
-# =========================================================
-
-@app.post("/predict/churn")
-
-def predict_churn(data: CustomerData):
-
-    features = np.array([[
-        data.Recency,
-        data.Frequency,
-        data.Monetary,
-        data.AvgMonetaryPerPurchase
-    ]])
-
-    probability = model.predict_proba(
-        features
-    )[0][1]
-
-    prediction = int(probability > 0.5)
-
-    return {
-
-        "churn_probability": float(probability),
-
-        "prediction": prediction
+        "churn_prediction": int(prediction),
+        "churn_probability": round(float(probability), 4)
     }

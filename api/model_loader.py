@@ -15,7 +15,7 @@ FEATURE_PATH = os.path.join(
     BASE_DIR,
     "output",
     "models",
-    "churn_features.pkl"
+    "churn_model.pkl"
 )
 
 # Load models once during startup

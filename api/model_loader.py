@@ -11,13 +11,6 @@ CHURN_MODEL_PATH = os.path.join(
     "xgboost_churn_model.pkl"
 )
 
-FEATURE_PATH = os.path.join(
-    BASE_DIR,
-    "output",
-    "models",
-    "churn_model.pkl"
-)
 
 # Load models once during startup
 churn_model = joblib.load(CHURN_MODEL_PATH)
-churn_features = joblib.load(FEATURE_PATH)

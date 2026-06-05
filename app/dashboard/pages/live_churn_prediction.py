@@ -2,10 +2,16 @@ import streamlit as st
 import requests
 
 from auth_guard import check_auth
+from roles import is_admin
 from utils.theme import load_css
 
-check_auth()
 load_css()
+check_auth()
+
+if not is_admin():
+    st.error("⛔ Access Denied")
+    st.stop()
+
 
 st.set_page_config(page_title="Live Churn Prediction", page_icon="⚠️", layout="wide")
 

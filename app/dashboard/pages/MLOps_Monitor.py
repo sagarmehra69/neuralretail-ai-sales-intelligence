@@ -12,7 +12,12 @@ from auth_guard import check_auth
 from utils.theme import load_css
 from utils.chart_theme import apply_dark_theme
 
+load_css()
 check_auth()
+
+if not st.session_state.get("is_admin", False):
+    st.error("⛔ Access Denied: Admins Only")
+    st.stop()
 
 # =========================================================
 # PAGE CONFIG
@@ -23,7 +28,7 @@ st.set_page_config(
     layout="wide"
 )
 
-load_css()
+
 
 # =========================================================
 # PAGE TITLE

@@ -12,3 +12,4 @@ statsmodels
 streamlit_authenticator
 bcrypt
 reportlab
+openpyxl

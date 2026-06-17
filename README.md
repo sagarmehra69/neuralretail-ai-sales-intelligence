@@ -153,52 +153,6 @@ Cloud Deployment (Render + Streamlit Cloud)
 * Pandas
 * NumPy
 
-## Authentication
-
-* streamlit-authenticator
-
-## Reporting
-
-* ReportLab
-* OpenPyXL
-
-## Deployment
-
-* Render
-* Streamlit Cloud
-* GitHub
-
----
-
-# 📂 Project Structure
-
-```text
-NeuralRetail-AI/
-│
-├── api/
-│   ├── main.py
-│   ├── model_loader.py
-│   ├── schemas.py
-│   └── requirements.txt
-│
-├── app/
-│   ├── pages/
-│   ├── login.py
-│   ├── auth_guard.py
-│   └── roles.py
-│
-├── output/
-│   ├── figures/
-│   └── models/
-│
-├── notebooks/
-│
-├── render.yaml
-├── auth_config.yaml
-├── app.py
-└── README.md
-```
-
 ---
 
 # ⚙️ Installation Guide
@@ -263,36 +217,6 @@ http://127.0.0.1:8000/docs
 ```bash
 streamlit run app.py
 ```
-
----
-
-# 🔌 API Endpoints
-
-## Churn Prediction Endpoint
-
-```http
-POST /predict/churn
-```
-
-### Example Request
-
-```json
-{
-  "Recency": 20,
-  "Frequency": 5,
-  "Monetary": 400
-}
-```
-
-### Example Response
-
-```json
-{
-  "churn_prediction": 0,
-  "churn_probability": 0.2469
-}
-```
-
 ---
 
 # 🔐 Demo Credentials
@@ -310,19 +234,6 @@ Password: admin123
 Username: viewer
 Password: viewer123
 ```
-
----
-
-# 📈 MLOps & Monitoring Concepts
-
-This project includes simulated enterprise MLOps features:
-
-* AI monitoring dashboard
-* API health tracking
-* Drift awareness simulation
-* Prediction statistics
-* Cloud deployment architecture
-
 ---
 
 # 🎯 Business Use Cases
@@ -345,45 +256,6 @@ This project includes simulated enterprise MLOps features:
 ✅ Monitoring dashboard
 ✅ Export system
 ✅ Enterprise UI/UX
-
----
-
-# 🚧 Future Improvements
-
-* Docker containerization
-* CI/CD pipeline
-* Real drift detection using Evidently AI
-* Database integration
-* Automated retraining pipelines
-* Email alert system
-* Multi-tenant support
-
----
-
-# 👨‍💻 Author
-
-## Sagar Mehra
-
-BCA Student | AI & Machine Learning Enthusiast
-
-### Skills
-
-* Machine Learning
-* Python
-* Streamlit
-* FastAPI
-* Data Analytics
-* Power BI
-* SQL
-* Dashboard Engineering
-
----
-
-# 📜 License
-
-This project is developed for educational and portfolio purposes.
-
----
 
 # ⭐ Final Note
 
